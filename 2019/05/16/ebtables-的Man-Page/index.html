@@ -104,7 +104,7 @@
 <h3 id="表-三张"><a href="#表-三张" class="headerlink" title="表 - 三张"></a>表 - 三张</h3><ul>
 <li>filter - 默认表。<ul>
 <li>内建的链：<strong>INPUT</strong> {帧[在MAC层面上]就是发给网桥的时候[即帧的目的MAC地址就是网桥时]会经过这条链chain } </li>
-<li><strong>OUTPUT</strong>{ 适用于本地生成的帧，或者是(b)routed的帧，或说routed我知道是路由时IP层下来的，但是brouted是<strong>什么鬼？？</strong>  }</li>
+<li><strong>OUTPUT</strong> { 适用于本地生成的帧，或者是(b)routed的帧，，，话说routed我知道是路由时IP层下来的，但是brouted是<strong>什么鬼？？</strong>  }</li>
 <li><strong>FORWARD</strong> { 适用于被网桥转发的帧 }</li>
 </ul>
 </li>
@@ -115,29 +115,29 @@
 <li>注：PREROUTING and POSTROUTING: it would be more accurate to call them PREFORWARDING and POSTFORWARDING，且你可以使用 -E 选项来将其改名</li>
 </ul>
 </li>
-<li>broute - 经常备用来 make a brouter ???<ul>
-<li>只有一条内建的链：<strong>BROUTING</strong> , 且这个表中的<strong>DROP</strong>和<strong>ACCEPT</strong>分别表示”让其被路由“和”让其被桥接“</li>
+<li>broute - 经常被用来 make a brouter ???<ul>
+<li>只有一条内建的链：<strong>BROUTING</strong> , 且这个表中的 <strong>DROP</strong> 和 <strong>ACCEPT</strong> 分别表示”让其被路由“和”让其被桥接“</li>
 <li>BROUTING chain 在很早就会被帧拿来做匹配，当然只能运行”流经<strong>转发状态的端口</strong>的帧“来匹配，此处target常用<code>redirect</code></li>
 </ul>
 </li>
 </ul>
-<h3 id="CHAINS-若干"><a href="#CHAINS-若干" class="headerlink" title="CHAINS - 若干"></a>CHAINS - 若干</h3><p>理解方式一：</p>
+<h3 id="CHAINS-若干"><a href="#CHAINS-若干" class="headerlink" title="CHAINS - 若干"></a>CHAINS - 若干</h3><p><strong>理解方式一：</strong></p>
 <p>内核中有三张内嵌有CHAINS的表。三张表按功能划分，每个功能（也就是表）中用该功能相适应的“规则”。每一条规则就是一个chain。</p>
 <p>每一条chain都是一个有特定顺序的“链表”，用来做一次以太网帧的匹配。如果，某个以太网帧匹配到了一条chain，那么就对该帧执行</p>
 <p>这条chain上的 target。如果这个帧没有匹配上这条chain，那么继续匹配下一跳chain，用户可以扩展一条chain（创建chain的第二个</p>
 <p>往后的结点）然后使用 “头结点” chain “head” 的 target 域来连接。</p>
-<p>*理解方式不重要，解决问题才重要。</p>
-<p>理解方式二：</p>
+<p><em>理解方式不重要，解决问题才重要。</em></p>
+<p><strong>理解方式二：</strong> （这个才是正解）</p>
 <p>内核中有三张内嵌有CHAINS的表。三张表按功能划分，每个功能（也就是表）中用该功能相适应的“规则”。每”一类规则“集就是一个chain。</p>
 <p>如INPUT chain，OUTPUT chain 等，每一条 chain 都是有特定顺序的规则，用来依次做以太网帧的匹配。如果，某个以太网帧匹配到了一</p>
 <p>条 chain 中的某一个规则，那么就对该帧执行这条规则上的 target 。如果这个帧没有匹配上这条规则，那么继续匹配改chain中的下一条规则，</p>
 <p>用户可以扩展一条chain（创建一类新的规则集）然后使用内建的规则集（chain）的 target 域来连接。</p>
-<p><strong>搞清楚上文的问号部分：什么事brouter(before route or bridge route)，什么是转发状态的端口，什么是redirect，怎么理解broute</strong></p>
+<p><strong>搞清楚上文的问号部分：什么是 brouter(‘before route’ or ‘bridge route’)，什么是转发状态的端口，什么是redirect，怎么理解broute</strong></p>
 <ul>
 <li>brouter 即 bridge router ，能桥接又能路由的路由器（目前大部分都是这样）</li>
 <li>REDIRECT：会改变目标MAC地址，在BROUTING链里使用时，MAC地址被改为桥端口地址；在nat表的PREROUTING链中使用时，会改为网桥的地址</li>
-<li>broute</li>
-<li>转发状态的接口</li>
+<li>broute：即路由或者判断路由还是桥接的过程</li>
+<li>转发状态的接口：被用来进行”端口转发”的网卡接口（interface）</li>
 </ul>
 <h3 id="TARGETS"><a href="#TARGETS" class="headerlink" title="TARGETS"></a>TARGETS</h3><ul>
 <li><p>ACCEPT</p>
@@ -190,13 +190,16 @@
 <p>​                将内核中保存的该table的目前的数据保存到一个特定文件中去（相当于备份）</p>
 <p>–atomic-commit</p>
 <p>​                可以将一个特定文件中的数据提交到并覆盖内核中的数据</p>
-<p>​                使用步骤：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1. 先将使用 --atomic-init 或者 --atomic-save 产生的table数据文件使用`--atomic-file` 加载到当前的防火墙table</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>加载文件至防火墙table（此时还没刷新内核中的数据呢）还有另一途径就是：设置<em>EBTABLES_ATOMIC_FILE</em> 环境变量</li>
-<li>使用<code>--atomic-commit</code> 提交并修改内核中的数据</li>
-<li>在操作系统起始的 boot script 中十分有用，用来构建快速 ebtables</li>
+<p>​                <strong>使用步骤：</strong></p>
+<ol>
+<li><p>先将使用 –atomic-init 或者 –atomic-save 产生的table数据文件使用<code>--atomic-file</code> 加载到当前的防火墙table</p>
+</li>
+<li><p>加载文件至防火墙table（此时还没刷新内核中的数据呢）还有另一途径就是：设置<em>EBTABLES_ATOMIC_FILE</em> 环境变量</p>
+</li>
+<li><p>使用<code>--atomic-commit</code> 提交并修改内核中的数据</p>
+</li>
+<li><p>在操作系统起始的 boot script 中十分有用，用来构建快速 ebtables</p>
+</li>
 </ol>
 <p>-V, –version</p>
 <p>-h, –help [list of module names]</p>
