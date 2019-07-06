@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://pwn4justice.github.io/"/>
-  <updated>2019-07-06T09:27:37.507Z</updated>
+  <updated>2019-07-06T16:44:51.074Z</updated>
   <id>https://pwn4justice.github.io/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>XPath 学习（一）</title>
+    <link href="https://pwn4justice.github.io/2019/07/07/XPath-%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>https://pwn4justice.github.io/2019/07/07/XPath-学习（一）/</id>
+    <published>2019-07-06T16:44:13.000Z</published>
+    <updated>2019-07-06T16:44:51.074Z</updated>
+    
+    <content type="html"><![CDATA[<p>什么是 XPath？怎么使用的？什么是路径表达式、Step、路径、节点、元素、节点与元素的区别，等等…</p><a id="more"></a><h3 id="题外话：如何提升-pip-速度"><a href="#题外话：如何提升-pip-速度" class="headerlink" title="题外话：如何提升 pip 速度"></a>题外话：如何提升 pip 速度</h3><p><code>pip install [包名] -i [ftp站名地址] --trusted-host [ftp站点名]</code></p><p>站点地址有：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">阿里云 http://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">中国科技大学 https://pypi.mirrors.ustc.edu.cn/simple/</span><br><span class="line">豆瓣(douban) http://pypi.douban.com/simple/</span><br><span class="line">清华大学 https://pypi.tuna.tsinghua.edu.cn/simple/</span><br><span class="line">中国科学技术大学 http://pypi.mirrors.ustc.edu.cn/simple/</span><br></pre></td></tr></table></figure><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>XPath，是XML Path Language，XML路径语言。用来搜寻XML（HTML）文档内容。</p><p>参考：<a href="https://www.w3.org/TR/xpath/" target="_blank" rel="noopener">xpath</a></p><br><h3 id="常用规则"><a href="#常用规则" class="headerlink" title="常用规则"></a>常用规则</h3><table><thead><tr><th align="center">表达式</th><th align="center">描述</th></tr></thead><tbody><tr><td align="center">html/body/…</td><td align="center">此节点的所有子节点</td></tr><tr><td align="center">/</td><td align="center">选择直接子节点</td></tr><tr><td align="center">//</td><td align="center">选取所有子、孙节点</td></tr><tr><td align="center">.</td><td align="center">选择当前节点</td></tr><tr><td align="center">..</td><td align="center">选择当前节点的父节点</td></tr><tr><td align="center">@</td><td align="center">选取属性</td></tr></tbody></table><p><strong>注：通常使用开头的 // 来选取所有符合要求的节点</strong></p><br><h3 id="XPath-术语"><a href="#XPath-术语" class="headerlink" title="XPath 术语"></a>XPath 术语</h3><ol><li>节点（Node）： 一般就是指元素（Element）</li><li>基本值（原子值 Atomic Value）</li><li>项目（Item）<ul><li>基本值或者节点</li></ul></li></ol><br><h3 id="节点之间的关系"><a href="#节点之间的关系" class="headerlink" title="节点之间的关系"></a>节点之间的关系</h3><ol><li>Parent</li><li>Children</li><li>Sibling</li><li>Ancestor<ul><li>父、父父等</li></ul></li><li>Descendant<ul><li>子、子子等</li></ul></li></ol><br><h3 id="XPath-有7种类型的节点"><a href="#XPath-有7种类型的节点" class="headerlink" title="XPath 有7种类型的节点"></a>XPath 有7种类型的节点</h3><ol><li>元素</li><li>属性</li><li>文本</li><li>命名空间</li><li>处理指令</li><li>注释</li><li>根节点（文档节点）</li></ol><br><h3 id="XPath-使用-lt-路径表达式-gt-在XML文档中选取节点"><a href="#XPath-使用-lt-路径表达式-gt-在XML文档中选取节点" class="headerlink" title="XPath 使用&lt;路径表达式&gt;在XML文档中选取节点"></a>XPath 使用&lt;路径表达式&gt;在XML文档中选取节点</h3><p><strong>节点是通过沿着路径或者 step 来选取的</strong>：</p><p><img src="../../../%E7%AC%94%E8%AE%B0/XPath/node_selecting.jpg" alt="My_understanding_of_NODE_selecting"></p><br><p><strong>路径表达式示例：</strong></p><p><strong>body</strong>                选取 body 元素的子节点<br><strong>/html</strong>                选取根元素 html，路径起始于 <code>/</code> ，则此路径代表某元素的<strong>绝对路径</strong><br><strong>body/div</strong>          选取属于 body 的子元素的所有 div 元素<br><strong>//img</strong>                选取所有 img 子元素，而不管他们在文档的位置如何<br><strong>body//p</strong>            选取属于 body 元素的后代的所有 p 元素，而不管它们位于 body 之下的什么位置<br><strong>//@href</strong>            选取名为 href 的所有属性    <strong>???有待考证—是选取属性还是带该属性的节点???</strong></p><br><h3 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a>谓语（Predicates）</h3><p><strong>谓语</strong> 是用来查找某个特定的节点或者包含某个指定的值的节点，<strong>被嵌在方括号里</strong>。</p><p><br>一些带有谓语的路径表达式：</p><table><thead><tr><th align="center">路径表达式</th><th align="center">含义</th></tr></thead><tbody><tr><td align="center">/html/body/form/input[1]</td><td align="center">假定form表单（元素）里有多个input子元素，选取第一个input元素</td></tr><tr><td align="center">/html/body/form/input[last()]</td><td align="center">假设同上，选取最后一个 input 元素</td></tr><tr><td align="center">/html/body/form/intpu[last()-1]</td><td align="center">假设同上，选取倒数第二个 input 元素</td></tr><tr><td align="center">//body/form/input[position()&lt;3]</td><td align="center">假设同上，选取头两个 input 元素</td></tr><tr><td align="center">//p[@class]</td><td align="center">选取所有拥有 class 属性的 p 元素（节点）</td></tr><tr><td align="center">//p[@id=’some_id’]</td><td align="center">选取所有 id 属性值为 ‘some_id’ 的 p 元素</td></tr><tr><td align="center">/bookstore/book[price&gt;3.19]</td><td align="center">price 是元素，选取 bookstore 元素的所有 book 元素且其子元素 price 得满足&gt;3.19</td></tr><tr><td align="center">/bookstore/book[price&gt;1.08]/title</td><td align="center">选取 bookstore 元素的所有 book 元素（其子元素 price 得满足&gt;1.08）的所有 title 子元素</td></tr></tbody></table><br><h3 id="选取未知节点（元素）"><a href="#选取未知节点（元素）" class="headerlink" title="选取未知节点（元素）"></a>选取未知节点（元素）</h3><p>技巧：<strong>使用通配符</strong></p><p><code>*</code> ：     匹配任何元素（节点）</p><p><code>@*</code> ：    匹配任何属性节点</p><p><code>node()</code> ：匹配任何类型的节点（注意：元素只是7种节点的一种）</p><p><strong>示例：</strong></p><table><thead><tr><th align="center">路径表达式</th><th align="center">含义</th></tr></thead><tbody><tr><td align="center">/html/*</td><td align="center">选取 html 元素的所有子元素</td></tr><tr><td align="center">//*</td><td align="center">选取文档中的所有元素</td></tr><tr><td align="center">//div[@*]</td><td align="center">选取所有有属性的 div 元素</td></tr></tbody></table><br><h3 id="选取多个路径"><a href="#选取多个路径" class="headerlink" title="选取多个路径"></a>选取多个路径</h3><p><strong>相当于 or（或）</strong>：使用 <code>|</code> 运算符</p><p>举个栗子：</p><table><thead><tr><th align="center">路径表达式</th><th align="center">含义</th></tr></thead><tbody><tr><td align="center">//div/form | //p</td><td align="center">选取 div 元素的所有 form 子元素和文档中所有的 p 元素</td></tr><tr><td align="center">//script | //style</td><td align="center">选取文档中所有的 script 元素和 style 元素</td></tr></tbody></table><br>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;什么是 XPath？怎么使用的？什么是路径表达式、Step、路径、节点、元素、节点与元素的区别，等等…&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>lxml etree tutorial part three</title>
