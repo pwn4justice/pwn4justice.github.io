@@ -91,7 +91,10 @@
         </span></div>
     </header>
 
-    <div class="post-content"><ol>
+    <div class="post-content"><p>记录了一些自己在实践 SQL 注入时遇到的问题及解决和思考。</p>
+<a id="more"></a>
+
+<ol>
 <li><p>对WHERE子句的一些浅要理解</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">语句 `SELECT * FROM users WHERE username=&apos;admin&apos; OR 1=1;` </span><br><span class="line">相当于：`SELECT * FROM users WHERE username=&apos;admin&apos;;` </span><br><span class="line">和`SELECT * FROM users WHERE 1=1;` 结果的集合，</span><br><span class="line">既返回admin的数据又返回其他用户；</span><br><span class="line"></span><br><span class="line">同理：`SELECT * FROM users WHERE username=&apos;admin&apos; AND password=&apos;&apos; OR 1=1;`</span><br><span class="line">相当于 `SELECT * FROM users WHERE username=&apos;admin&apos; AND password=&apos;&apos;;` </span><br><span class="line">与 `SELECT * FROM users WHERE 1=1;` 的结果结合。</span><br></pre></td></tr></table></figure>
 
