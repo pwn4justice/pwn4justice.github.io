@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<meta name="description" content="Hello World"><link rel="alternate" href="/atom.xml" title="Hexo"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://r0sev.github.io/2019/07/06/hello-world/">
+<meta name="description" content="macOS 10.14.3 编译安装telnet工具"><link rel="alternate" href="/atom.xml" title="Hexo"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://r0sev.github.io/2019/04/05/macOS-10-14-3-编译安装telnet工具/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
 </script>
 
-    <title>Hello World - Hexo</title>
+    <title>macOS 10.14.3 编译安装telnet工具 - Hexo</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -82,33 +82,33 @@
         <div class="content-wrapper">
           <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title">Hello World
+      <h1 class="post-title">macOS 10.14.3 编译安装telnet工具
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2019-07-06
+          2019-04-05
         </span></div>
     </header>
 
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-前提"><span class="toc-text">0x01 前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-开始下载并安装"><span class="toc-text">0x02 开始下载并安装</span></a></li></ol>
     </div>
-  </div><div class="post-content"><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+  </div><div class="post-content"><h3 id="0x01-前提"><a href="#0x01-前提" class="headerlink" title="0x01 前提"></a>0x01 前提</h3><p>Homebrew 实在是太慢，可以考虑使用privoxy转发代理到terminal使用，但是太麻烦，反正源码也不大，直接使用源码编译安装此时是比较合适的。</p>
+<h3 id="0x02-开始下载并安装"><a href="#0x02-开始下载并安装" class="headerlink" title="0x02 开始下载并安装"></a>0x02 开始下载并安装</h3><ul>
+<li><p>创建临时目录并下载至此</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir inetutils</span><br><span class="line">$ <span class="built_in">cd</span> inetutils</span><br><span class="line">$ curl https://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz -O</span><br><span class="line">$ tar -zxvf inetutils-1.9.4.tar.xz</span><br><span class="line">$ <span class="built_in">cd</span> inetutils-1.9.4</span><br><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Users/user_name/inetutils/inetutils-1.9.4</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>配置并编译安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ./configure --prefix=/usr/<span class="built_in">local</span> --<span class="built_in">disable</span>-servers \</span><br><span class="line">--<span class="built_in">disable</span>-hostname --<span class="built_in">disable</span>-ping --<span class="built_in">disable</span>-ping6 \</span><br><span class="line">--<span class="built_in">disable</span>-logger --<span class="built_in">disable</span>-talk --<span class="built_in">disable</span>-tftp \</span><br><span class="line">--<span class="built_in">disable</span>-whois --<span class="built_in">disable</span>-ifconfig --<span class="built_in">disable</span>-traceroute</span><br><span class="line"></span><br><span class="line">$ make -j8</span><br><span class="line"></span><br><span class="line">$ sudo make install</span><br><span class="line">...input your password...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>此时便可以使用Telnet了</p>
+</li>
+</ul>
 
       </div>
       <div class="post-copyright">
@@ -118,7 +118,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="https://r0sev.github.io/2019/07/06/hello-world/">https://r0sev.github.io/2019/07/06/hello-world/</a>
+      <a href="https://r0sev.github.io/2019/04/05/macOS-10-14-3-编译安装telnet工具/">https://r0sev.github.io/2019/04/05/macOS-10-14-3-编译安装telnet工具/</a>
     </p>
     <p class="copyright-item">
       <span>copyright.license: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
@@ -126,10 +126,15 @@
   </div>
       <footer class="post-footer">
         
-        <nav class="post-nav"><a class="prev" href="/2019/07/06/test-1/">
+        <nav class="post-nav"><a class="prev" href="/2019/04/07/Cydia-无法连接网络的处理/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">test 1</span>
+        <span class="prev-text nav-default">Cydia 无法连接网络的处理</span>
         <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/04/04/Linux-内核代码风格规范/">
+        <span class="next-text nav-default">Linux 内核代码风格规范</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
       </a>
     </nav></footer>
     </article></div><div class="comments" id="comments"></div></div>

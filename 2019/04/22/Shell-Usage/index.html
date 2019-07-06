@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Shell Usage"><link rel="alternate" href="/atom.xml" title="Hexo"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://r0sev.github.io/2019/04/22/Shell-Usage/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>Shell Usage - Hexo</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hexo</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hexo</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Shell Usage
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-04-22
+        </span></div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-How-to-use-‘vim’"><span class="toc-text">0x01 How to use ‘vim’</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Edit-Mode"><span class="toc-text">1. Edit Mode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Command-Mode"><span class="toc-text">2. Command Mode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Using-‘wq-’-to-save-file-compulsively"><span class="toc-text">3. Using ‘wq!’ to save file compulsively</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Some-commen-fast-key-in-daily-life"><span class="toc-text">4. Some commen fast-key in daily life</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-About-Unusual-Quit-of-vim"><span class="toc-text">5. About Unusual Quit of vim</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-Frequently-used-commands"><span class="toc-text">0x02 Frequently used commands</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-alias"><span class="toc-text">1. alias</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Visual-Block"><span class="toc-text">2. Visual Block</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Multi-files-editing"><span class="toc-text">3. Multi files editing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Using-multi-windows-of-vim"><span class="toc-text">4. Using multi windows of vim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Configuration-file-of-vim"><span class="toc-text">5. Configuration file of vim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-About-encoding-problem"><span class="toc-text">6. About encoding problem</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Something-about-Shell"><span class="toc-text">0x03 Something about Shell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-builtin-commands"><span class="toc-text">1. builtin commands:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-some-truth-of-variables"><span class="toc-text">2. some truth of variables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-some-wired-commands-I-dont-need-them-for-now"><span class="toc-text">3. some wired commands , I dont need them , for now.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-modify-the-content-of-variable"><span class="toc-text">4. modify the content of variable</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h2 id="0x01-How-to-use-‘vim’"><a href="#0x01-How-to-use-‘vim’" class="headerlink" title="0x01 How to use ‘vim’"></a>0x01 How to use ‘vim’</h2><h3 id="1-Edit-Mode"><a href="#1-Edit-Mode" class="headerlink" title="1. Edit Mode"></a>1. Edit Mode</h3><ul>
+<li>using ‘a’ ‘A’ ‘o’ ‘O’ ‘i’ ‘I’ ‘r’ ‘R’ to enable this mode</li>
+</ul>
+<h3 id="2-Command-Mode"><a href="#2-Command-Mode" class="headerlink" title="2. Command Mode"></a>2. Command Mode</h3><ul>
+<li>‘:’ ‘/‘ ‘?’ </li>
+</ul>
+<h3 id="3-Using-‘wq-’-to-save-file-compulsively"><a href="#3-Using-‘wq-’-to-save-file-compulsively" class="headerlink" title="3. Using ‘wq!’ to save file compulsively"></a>3. Using ‘wq!’ to save file compulsively</h3><h3 id="4-Some-commen-fast-key-in-daily-life"><a href="#4-Some-commen-fast-key-in-daily-life" class="headerlink" title="4. Some commen fast-key in daily life"></a>4. Some commen fast-key in daily life</h3><ol>
+<li><code>ctrl + f</code> : move to next page(screen)</li>
+<li><code>ctrl + b</code> : move to previous page(screen)</li>
+<li><code>ctrl + d</code> : move to next half page</li>
+<li><code>ctrl + u</code> : </li>
+<li><code>+</code> : next line <code>-</code> : previous line</li>
+<li><code>num&lt;space&gt;</code> : to ‘num’- th character of THIS line</li>
+<li><code>0</code> : to the head of THIS line</li>
+<li><code>$</code> : to the tail of THIS line</li>
+<li><code>H</code> or <code>M</code> or <code>L</code> : to the head of this screen ; to the middle of this screen ; to the lowest of this screen</li>
+<li><code>nG</code> : to the ‘n’ line of this FILE</li>
+<li><code>N&lt;enter&gt;</code> : move down N lines of  the mouse</li>
+<li><code>?keyword:</code>  :  find the word ‘keyword’ upward from THERE</li>
+<li><code>:n1,n2s/old/new/g</code>  : find and replace between line ‘n1’ and line ‘n2’</li>
+<li><code>:1,$s/old/new/g</code>  : find and replace from 1st line to the last one</li>
+<li>``:1,$s/old/new/gc`  : find and replace from 1st line to the last one and every one needs to CONFIRM</li>
+<li><code>nx</code> or <code>nX</code>  : delete n character</li>
+<li><code>d1G</code> : delete TO 1st line from THERE</li>
+<li><code>dG</code> : delete TO final line from THERE</li>
+<li><code>d$</code> : delete TO the tail of THIS line</li>
+<li><code>d0</code> : delete TO the head of THIS line</li>
+<li><code>nyy</code> : copy n line</li>
+<li><code>y1G</code></li>
+<li><code>yG</code></li>
+<li><code>y$</code></li>
+<li><code>y0</code></li>
+<li><code>J</code> : combine THIS line and NEXT line</li>
+<li><code>Ctrl + r</code> or <code>.</code> : repeat the action again</li>
+<li><code>:w filename</code> : save file to a newfile</li>
+<li><code>:r filename</code> : copy the content of ‘filename’ next to where the curse is</li>
+<li><code>:n1,n2 w filename</code> : save content of line n1 TO n2 to a newfile</li>
+<li><code>:! commnad</code> : runing shell command in vim</li>
+<li><code>:set nonu</code> : CANCEL showing line number</li>
+</ol>
+<h3 id="5-About-Unusual-Quit-of-vim"><a href="#5-About-Unusual-Quit-of-vim" class="headerlink" title="5. About Unusual Quit of vim"></a>5. About Unusual Quit of vim</h3><ul>
+<li>You should delete file <code>.file.swp</code> manually after Recover From this file!</li>
+</ul>
+<h2 id="0x02-Frequently-used-commands"><a href="#0x02-Frequently-used-commands" class="headerlink" title="0x02 Frequently used commands"></a>0x02 Frequently used commands</h2><h3 id="1-alias"><a href="#1-alias" class="headerlink" title="1. alias"></a>1. alias</h3><h3 id="2-Visual-Block"><a href="#2-Visual-Block" class="headerlink" title="2. Visual Block"></a>2. Visual Block</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.1    host1.class.net</span><br><span class="line">192.168.1.2    host2.class.net</span><br><span class="line">192.168.1.3    host3.class.net</span><br><span class="line">192.168.1.4    host4.class.net</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>Important Keys:</p>
+<p><code>v</code>  choose characters</p>
+<p><code>V</code>  choose lines</p>
+<p><code>ctrl + v</code> choose rectangle area</p>
+<p><code>y</code>  copy</p>
+<p><code>d</code>  delete</p>
+<p><strong>For instance : Try to copy ‘ hostn  ‘ to the area behine ‘ .net ‘  like this</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.1    host1.class.net	host1</span><br><span class="line">192.168.1.2    host2.class.net	host2</span><br><span class="line">192.168.1.3    host3.class.net	host3</span><br><span class="line">192.168.1.4    host4.class.net	host4</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>You can follow the steps:</p>
+<ol>
+<li>move curse to ‘h’ of ‘host1’</li>
+<li>Press <code>ctrl v</code></li>
+<li>move curse to 4 of ‘host4’</li>
+<li>press <code>y</code></li>
+<li>and move curse to the 1st line’s tail</li>
+<li>press <code>p</code></li>
+</ol>
+<h3 id="3-Multi-files-editing"><a href="#3-Multi-files-editing" class="headerlink" title="3. Multi files editing"></a>3. Multi files editing</h3><ol>
+<li>using <code>vim file1 file2</code> to open two files</li>
+<li><code>:n</code> to edit the next file and <code>:N</code> to edit the previous one</li>
+<li><code>:files</code> to see how many files you have opened</li>
+<li>BTW: you can use <code>yy</code> and <code>p</code> between those 2 files!</li>
+</ol>
+<h3 id="4-Using-multi-windows-of-vim"><a href="#4-Using-multi-windows-of-vim" class="headerlink" title="4. Using multi windows of vim"></a>4. Using multi windows of vim</h3><ol>
+<li>open a file</li>
+<li>using <code>:sp</code> to split a window for itself</li>
+<li>using <code>:sp file2</code> to put file2 underneath file1</li>
+<li>Move curse between two windows:<ol>
+<li>ctrl w j : move down</li>
+<li>ctrl w k : move up</li>
+<li>ctrl w q : quit an window</li>
+</ol>
+</li>
+</ol>
+<h3 id="5-Configuration-file-of-vim"><a href="#5-Configuration-file-of-vim" class="headerlink" title="5. Configuration file of vim"></a>5. Configuration file of vim</h3><ol>
+<li><code>.vimrc</code> : default settings</li>
+<li><code>.viminfo</code>: operation history</li>
+<li>changing settings of vim:<ol>
+<li>using <code>:set xxx</code> directly in vim to temporarily changing the settings</li>
+<li>edit ‘.vimrc’ file to modify default settings</li>
+<li>some examples:</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">:set nu/nonu</span><br><span class="line">:set hlsearch/nohlsearch</span><br><span class="line">:set backup</span><br><span class="line">:set showmode						;;aka showing &apos;--INSERT--&apos; or &apos;--REPLACE--&apos;</span><br><span class="line">:set backspace=0/1/2</span><br><span class="line">:set all</span><br><span class="line">:syntax on/off</span><br><span class="line">:set bg=dark/light</span><br><span class="line">:set autoindent</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-About-encoding-problem"><a href="#6-About-encoding-problem" class="headerlink" title="6. About encoding problem"></a>6. About encoding problem</h3><ul>
+<li><p>reference : <code>iconv</code> command</p>
+</li>
+<li><p>for instance:</p>
+<ul>
+<li>file1(encoding: <strong>big5</strong>) -&gt; file1.utf8(encoding: <strong>utf8</strong>) , you can do this:</li>
+<li><code>iconv -f big5 -t utf8 file1 -o file1.utf8</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-Something-about-Shell"><a href="#0x03-Something-about-Shell" class="headerlink" title="0x03 Something about Shell"></a>0x03 Something about Shell</h2><h3 id="1-builtin-commands"><a href="#1-builtin-commands" class="headerlink" title="1. builtin commands:"></a>1. builtin commands:</h3><ol>
+<li><code>type</code> : <code>type ls</code> may be == <code>which ls</code></li>
+<li><code>cd</code></li>
+</ol>
+<h3 id="2-some-truth-of-variables"><a href="#2-some-truth-of-variables" class="headerlink" title="2. some truth of variables"></a>2. some truth of variables</h3><ol>
+<li>“this is $var” <strong>not equals to</strong>  ‘this is $var’</li>
+<li>`command` <strong>is equal to</strong> <code>$(command)</code></li>
+<li><code>export</code> can create a <strong>global variable</strong></li>
+<li>the funny use of `command` : <code>cd /lib/modules/$(uname -r)/kernel</code></li>
+<li>you can define a work directory which name is very long to a <strong>variable</strong>: <code>[root@~ ]$ work=/a/b/c/d/e/</code>  and <code>cd $work</code></li>
+<li>using <code>env</code> to show <strong>global variables</strong></li>
+<li>using <code>set</code> to show <strong>all variables</strong></li>
+<li>actually, <strong>PS1=’[\u@\h \W]$‘</strong> and <strong>PS2=’&gt; ‘</strong><ol>
+<li><code>\h</code> : host</li>
+<li><code>\d</code> : like “Mon Feb 2”</li>
+<li><code>\H</code> : whole hostname</li>
+<li><code>\t</code> : 24hours</li>
+<li><code>\T</code> : 12hours</li>
+<li><code>\u</code> : username</li>
+<li><code>\v</code> : version of Bash</li>
+<li><code>\W</code> : whole name of directory, form ‘/‘</li>
+<li><code>\w</code>: dir name</li>
+<li><code>\$</code> : root:<strong>#</strong> and other:<strong>$</strong></li>
+</ol>
+</li>
+<li>system language setting: <code>/etc/sysconfig/i18n</code></li>
+<li><code>read</code> : get INPUT from user: <code>read -p &quot;Input Here: &quot;  var_name</code> or <code>read -p &quot;Input name: &quot; -t 20 name</code> then <code>echo $name</code></li>
+<li><code>declare</code><ol>
+<li>-a : declare an array</li>
+<li>-x : declare a global variable</li>
+<li>-i : declare an int value</li>
+<li>-r : declare a readonly variable</li>
+<li><code>declare -i sum=10+10+10</code> ==&gt; 30</li>
+<li><code>declare -x sum</code> change <strong>sum</strong> to global; <code>declare +x sum</code> change <strong>sum</strong> to normal variable</li>
+<li>using <code>declare -p var</code> to see var’s type</li>
+</ol>
+</li>
+</ol>
+<h3 id="3-some-wired-commands-I-dont-need-them-for-now"><a href="#3-some-wired-commands-I-dont-need-them-for-now" class="headerlink" title="3. some wired commands , I dont need them , for now."></a>3. some wired commands , I dont need them , for now.</h3><ol>
+<li><code>ulimit</code></li>
+<li><code>dd</code></li>
+<li><code>unalias</code></li>
+</ol>
+<h3 id="4-modify-the-content-of-variable"><a href="#4-modify-the-content-of-variable" class="headerlink" title="4. modify the content of variable"></a>4. modify the content of variable</h3><ol>
+<li>${path#/*root/bin:}  =&gt; from <code>path</code> delete the SHORTEST  <code>/.....root/bin;</code> </li>
+<li>${path##/*:} ==&gt; from <code>path</code> delete the LONGEST <code>/......;</code></li>
+<li><code>%</code> and <code>%%</code> is just the same as <code>#</code> and <code>##</code> , however, # starts from head but % starts from tail</li>
+<li>${path/old/new} ==&gt; for <strong>replace once</strong>  </li>
+<li>${path//old/new} ==&gt; for <strong>replace all</strong>  </li>
+<li>new_var=${old_var-content}, if old_var is null then new_var equals = content else new_var = old_var</li>
+<li><code>-</code> <code>:-</code>   if old_var is nul or old_var=””  then new_var equals = content else new_var = old_var</li>
+<li><code>+</code>  <code>:+</code></li>
+<li><code>=</code> <code>:=</code></li>
+<li><code>?</code> <code>:?</code></li>
+<li>In Shell:<ol>
+<li>!!                         :reapeat the last command</li>
+<li>!command       : search command in history</li>
+<li>!number           :execute the number-th command in history</li>
+</ol>
+</li>
+</ol>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://r0sev.github.io">r0sev</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://r0sev.github.io/2019/04/22/Shell-Usage/">https://r0sev.github.io/2019/04/22/Shell-Usage/</a>
+    </p>
+    <p class="copyright-item">
+      <span>copyright.license: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2019/04/30/iptables/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">iptables</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/04/07/Cydia-无法连接网络的处理/">
+        <span class="next-text nav-default">Cydia 无法连接网络的处理</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/r0sev" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">r0sev</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="lxml.etree tutorial - part one"><link rel="alternate" href="/atom.xml" title="Hexo"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://r0sev.github.io/2019/06/22/lxml-etree-tutorial-part-one/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>lxml.etree tutorial - part one - Hexo</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Hexo</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Hexo</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">lxml.etree tutorial - part one
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-22
+        </span></div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Element-类"><span class="toc-text">Element 类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#元素即列表"><span class="toc-text">元素即列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#元素像字典（dict）那样展现属性"><span class="toc-text">元素像字典（dict）那样展现属性</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p><em>翻译 by：pwn4justice</em></p>
+<p>内容：</p>
+<ul>
+<li>‘ Element ‘ 类<ul>
+<li>‘元素集合‘与列表（list）形式的兼容</li>
+<li>元素像字典（dict）那样展现属性</li>
+<li>元素中包含文本</li>
+<li>使用 XPath 查找文本</li>
+<li>树的迭代</li>
+<li>序列化</li>
+</ul>
+</li>
+<li>‘ ElementTree ‘ 类</li>
+<li>从字符串或文件中解析数据<ul>
+<li>fromstring() 方法</li>
+<li>XML() 方法</li>
+<li>解析器对象</li>
+<li>递增解析</li>
+<li>事件驱动的解析</li>
+</ul>
+</li>
+<li>命名空间</li>
+<li>‘ E-factory ‘</li>
+<li>ElementPath （元素路径）</li>
+</ul>
+<p>一个常用的导入 lxml.etree 的方式：<code>from lxml import etree</code></p>
+<p>如果你的代码只使用到了 ElementTree API 的功能而没有用到 lxml.tree 中的任何特有功能，那么你可以使用下面的方法导入 ElementTree 模块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">  from lxml import etree</span><br><span class="line">  print(&quot;running with lxml.etree&quot;)</span><br><span class="line">except ImportError:</span><br><span class="line">  try:</span><br><span class="line">    # Python 2.5</span><br><span class="line">    import xml.etree.cElementTree as etree</span><br><span class="line">    print(&quot;running with cElementTree on Python 2.5+&quot;)</span><br><span class="line">  except ImportError:</span><br><span class="line">    try:</span><br><span class="line">      # Python 2.5</span><br><span class="line">      import xml.etree.ElementTree as etree</span><br><span class="line">      print(&quot;running with ElementTree on Python 2.5+&quot;)</span><br><span class="line">    except ImportError:</span><br><span class="line">      try:</span><br><span class="line">        # normal cElementTree install</span><br><span class="line">        import cElementTree as etree</span><br><span class="line">        print(&quot;running with cElementTree&quot;)</span><br><span class="line">      except ImportError:</span><br><span class="line">        try:</span><br><span class="line">          # normal ElementTree install</span><br><span class="line">          import elementtree.ElementTree as etree</span><br><span class="line">          print(&quot;running with ElementTree&quot;)</span><br><span class="line">        except ImportError:</span><br><span class="line">          print(&quot;Failed to import ElementTree from any known place&quot;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Element-类"><a href="#Element-类" class="headerlink" title="Element 类"></a>Element 类</h3><p> <code>Element</code> 类是 ElementAPI 的主要容器对象，大多数 XML 树功能都可以通过这个类访问。通过<code>Element()</code>可以很容易创建元素：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; root = etree.Element(&apos;root_tag&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>使用 tag 属性访问XML的标签名称：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; print root.tag</span><br><span class="line">root_tag</span><br></pre></td></tr></table></figure>
+
+<p>元素是用XML树结构组织的，你可以使用 <code>append()</code> 方法来创建一个子元素并添加到父元素：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; root.append( etree.Element(&apos;child1_tag&apos;) )</span><br></pre></td></tr></table></figure>
+
+<p>然而还有一个更高效的方法来做上面这件事，即使用 <code>SubElement</code> 工厂（此处工厂：factory，意指某个类的初始化方法），但是，该方法需要将“父元素”变量作为它的第一个参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; child2 = etree.SubElement(root, &quot;child2_tag&quot;)</span><br><span class="line">&gt;&gt;&gt; child3 = etree.SubElement(root, &quot;child3_tag&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>可以通过如下步骤序列化你创建的这棵树，来看见真正的XML效果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; print(etree.tostring(root, pretty_print=True))</span><br><span class="line">&lt;root_tag&gt;</span><br><span class="line">  &lt;child1_tag/&gt;</span><br><span class="line">  &lt;child2_tag/&gt;</span><br><span class="line">  &lt;child3_tag/&gt;</span><br><span class="line">&lt;/root_tag&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="元素即列表"><a href="#元素即列表" class="headerlink" title="元素即列表"></a>元素即列表</h3><p>为了更简单和直观的访问子元素，该模块尽可能地模仿了 Python 的 list 的行为，每个元素都像是一个列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; child = root[0]</span><br><span class="line">&gt;&gt;&gt; print(child.tag)</span><br><span class="line">child1_tag</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; print(len(root))</span><br><span class="line">3</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; root.index(root[1]) # lxml.etree only!</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; children = list(root)</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; for child in root:</span><br><span class="line">...     print(child.tag)</span><br><span class="line">child1_tag</span><br><span class="line">child2_tag</span><br><span class="line">child3_tag</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; root.insert(0, etree.Element(&quot;child0_tag&quot;))</span><br><span class="line">&gt;&gt;&gt; start = root[:1]		//该方法返回列表,尽管列表中只有一个元素!</span><br><span class="line">&gt;&gt;&gt; end   = root[-1:]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; print(start[0].tag)</span><br><span class="line">child0_tag</span><br><span class="line">&gt;&gt;&gt; print(end[0].tag)</span><br><span class="line">child3_tag</span><br></pre></td></tr></table></figure>
+
+<p>在 ElementTree 1.3 和 lxml 2.0 之前，你可以通过如下方式查看某个元素是否有子节点，如果有，则为真：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if root:</span><br><span class="line">	print &quot;有子节点&quot;</span><br></pre></td></tr></table></figure>
+
+<p>不过这种方式不支持在未来使用了，应当改用 <code>len(element)</code> 这种方式，才会更少出错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; print(etree.iselement(root))  # 测试是否是 Element</span><br><span class="line">True</span><br><span class="line">&gt;&gt;&gt; if len(root):                 # 测试是否有孩子</span><br><span class="line">...     print(&quot;The root element has children&quot;)</span><br><span class="line">The root element has children</span><br></pre></td></tr></table></figure>
+
+<p>在 lxml(2.0+) 版本中，Element 的一个特殊的行为表现的和原始的 ElementTree（1.3- 或者 Python 2.7/3.2中）或者 list 不同，即赋值操作 <code>root[0] = root[-1]</code> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for c in root:</span><br><span class="line">...     print c</span><br><span class="line">...     print c.tag</span><br><span class="line">... </span><br><span class="line">&lt;Element child0 at 0x102c0c368&gt;</span><br><span class="line">child0</span><br><span class="line">&lt;Element child1 at 0x102c0ce18&gt;</span><br><span class="line">child1</span><br><span class="line">&lt;Element child2 at 0x102c0cea8&gt;</span><br><span class="line">child2</span><br><span class="line">&lt;Element child3 at 0x102c0ce60&gt;</span><br><span class="line">child3</span><br><span class="line">&gt;&gt;&gt; root[0] = root[-1]</span><br><span class="line">&gt;&gt;&gt; for c in root:</span><br><span class="line">...     print c</span><br><span class="line">...     print c.tag</span><br><span class="line">... </span><br><span class="line">&lt;Element child3 at 0x102c0ce60&gt;		//注意此处的地址</span><br><span class="line">child3</span><br><span class="line">&lt;Element child1 at 0x102c0ce18&gt;</span><br><span class="line">child1</span><br><span class="line">&lt;Element child2 at 0x102c0cea8&gt;</span><br><span class="line">child2</span><br></pre></td></tr></table></figure>
+
+<p>而在 list 中的行为是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; l = [0, 1, 2, 3]</span><br><span class="line">&gt;&gt;&gt; l[0] = l[-1]</span><br><span class="line">&gt;&gt;&gt; l</span><br><span class="line">[3, 1, 2, 3]		//复制，而不是直接移动</span><br></pre></td></tr></table></figure>
+
+<p>在早期的 ElementTree 中，Element 对象有着和 list 一样的表现，但是有个缺点就是：当你这样做之后，修改其中一个拥有多份拷贝的 Element 时，其余的也会被修改。</p>
+<p>这个小小的不同有一个好处，就是：用 lxml.tree 创建的 Element 总是只有一个父亲，可以用 <code>getparent()</code> 得到，且这在 ElementTree 中是不被支持的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; root is root[0].getparent()  # lxml.etree only!</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+
+<p>那当你只想拷贝时怎么办？凉拌。先用 etree.Element() 创建一个全新的对象，再用Python自带的 copy 模块来复制 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from copy import deepcopy</span><br><span class="line">&gt;&gt;&gt; element = etree.Element(&quot;temproray_store_tags&quot;)</span><br><span class="line">&gt;&gt;&gt; element = append( deepcopy(root[1]) )</span><br><span class="line">&gt;&gt;&gt; print(element[0].tag)</span><br><span class="line">child1_tag</span><br><span class="line">&gt;&gt;&gt; print([ c.tag for c in root ])</span><br><span class="line">[&apos;child3_tag&apos;, &apos;child1_tag&apos;, &apos;child2_tag&apos;]</span><br></pre></td></tr></table></figure>
+
+<p>兄弟节点可以用 <code>getprevious()</code> 或者 <code>getnext()</code> 反问到：只有在使用 lxml.etree 创建的元素上有效!</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; root[0] is root[1].getprevious() # lxml.etree only!</span><br><span class="line">True</span><br><span class="line">&gt;&gt;&gt; root[1] is root[0].getnext() # lxml.etree only!</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+
+<h3 id="元素像字典（dict）那样展现属性"><a href="#元素像字典（dict）那样展现属性" class="headerlink" title="元素像字典（dict）那样展现属性"></a>元素像字典（dict）那样展现属性</h3><p>XML 元素支持属性，可以在Element工厂中直接创建属性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; root = etree.Element(&quot;root_tag&quot;, interesting=&quot;totally&quot;)</span><br><span class="line">&gt;&gt;&gt; etree.tostring(root)</span><br><span class="line">b&apos;&lt;root interesting=&quot;totally&quot;/&gt;&apos;</span><br></pre></td></tr></table></figure>
+
+<p>属性只是无序的键值对，所以可以使用类字典的接口来访问他们：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; print(root.get(&quot;interesting&quot;))</span><br><span class="line">totally</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; print(root.get(&quot;href&quot;))</span><br><span class="line">None</span><br><span class="line">&gt;&gt;&gt; root.set(&quot;href&quot;, &quot;www.baidu.com&quot;)</span><br><span class="line">&gt;&gt;&gt; print(root.get(&quot;href&quot;))</span><br><span class="line">www.baidu.com</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; etree.tostring(root)</span><br><span class="line">b&apos;&lt;root interesting=&quot;totally&quot; href=&quot;www.baidu.com&quot;/&gt;&apos;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; sorted(root.keys())</span><br><span class="line">[&apos;href&apos;, &apos;interesting&apos;]</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; for name, value in sorted(root.items()):</span><br><span class="line">...     print(&apos;%s = %r&apos; % (name, value))</span><br><span class="line">href = &apos;www.baidu.com&apos;</span><br><span class="line">interesting = &apos;totally&apos;</span><br></pre></td></tr></table></figure>
+
+<p>如果你想使用类字典的形式来访问属性的话，可以使用 Element 的 <code>attrib</code> 属性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; attributes = root.attrib		//type(attributes) == &lt;type &apos;lxml.etree._Attrib&apos;&gt;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; print(attributes[&quot;interesting&quot;])</span><br><span class="line">totally</span><br><span class="line">&gt;&gt;&gt; print(attributes.get(&quot;src&quot;))</span><br><span class="line">None</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; attributes[&quot;src&quot;] = &quot;source_src&quot;</span><br><span class="line">&gt;&gt;&gt; print(attributes[&quot;src&quot;])</span><br><span class="line">source_src</span><br><span class="line">&gt;&gt;&gt; print(root.get(&quot;src&quot;))</span><br><span class="line">source_src</span><br></pre></td></tr></table></figure>
+
+<p>注意：attrib 是一个类字典(不是真正的 dict 对象)的对象，这意味着对 Element 的所有改变都会被反应到 attrib 对象上，反之亦然。同时，只要有一个 Element 的 attrib 属性在使用中，那么XML树就会一直存在于内存。不过可以使用一个真正的 dict 对象来保存某个 attrib 对象的一份快照，这是不依赖于XML树的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d = dict(root.attrib)</span><br><span class="line">&gt;&gt;&gt; sorted(d.items())</span><br><span class="line">[(&apos;href&apos;, &apos;www.baidu.com&apos;), (&apos;interesting&apos;, &apos;totally&apos;)]</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://r0sev.github.io">r0sev</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://r0sev.github.io/2019/06/22/lxml-etree-tutorial-part-one/">https://r0sev.github.io/2019/06/22/lxml-etree-tutorial-part-one/</a>
+    </p>
+    <p class="copyright-item">
+      <span>copyright.license: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2019/07/02/lxml-etree-tutorial-part-two/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">lxml.etree tutorial - part two</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/06/20/Python-爬虫知识索引2/">
+        <span class="next-text nav-default">Python 爬虫知识索引2</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/r0sev" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">r0sev</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
