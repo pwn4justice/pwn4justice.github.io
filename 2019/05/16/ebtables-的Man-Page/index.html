@@ -139,56 +139,42 @@
 <li>broute：即路由或者判断路由还是桥接的过程</li>
 <li>转发状态的接口：被用来进行”端口转发”的网卡接口（interface）</li>
 </ul>
-<h3 id="TARGETS"><a href="#TARGETS" class="headerlink" title="TARGETS"></a>TARGETS</h3><ul>
-<li><p>ACCEPT</p>
-</li>
-<li><p>DROP - 丢，不通知</p>
-</li>
-<li><p>CONTINUE - 必须去匹配下一个规则（rule）</p>
-</li>
-<li><p>RETURN - 有点函数返回的意味。停止继续匹配这条 chain 上（采用理解方式二）的规则，转而去匹配从”调用“（通过target域调用）这条</p>
-<p>chain 的那个 chain 的下一条规则。</p>
-</li>
-<li><p>EXTENSION</p>
-</li>
-<li><p>jump to a user-defined chain</p>
-</li>
-</ul>
+<h3 id="TARGETS"><a href="#TARGETS" class="headerlink" title="TARGETS"></a>TARGETS</h3><p>1.ACCEPT<br>2.DROP - 丢，不通知<br>3.CONTINUE - 必须去匹配下一个规则（rule）<br>4.RETURN - 有点函数返回的意味。停止继续匹配这条 chain 上（采用理解方式二）的规则，转而去匹配从”调用“（通过target域调用）这条chain 的那个 chain 的下一条规则。<br>5.EXTENSION<br>6.jump to a user-defined chain</p>
 <p>注： In the <strong>BROUTING</strong> chain however, the <strong>ACCEPT</strong> and <strong>DROP</strong> target have different meanings.</p>
 <h3 id="ebtables-命令的使用及参数说明"><a href="#ebtables-命令的使用及参数说明" class="headerlink" title="ebtables 命令的使用及参数说明"></a>ebtables 命令的使用及参数说明</h3><p>注：一般一次只能输入一条命令，除非 <code>-L</code> 和 <code>-Z</code> 同时使用；或者<code>-N</code> <code>-P</code>同时使用；或者使用了<code>--atomic-file</code></p>
-<p>-D, –delete</p>
+<p>-D, --delete</p>
 <p>​                -D start_nr[:end_nr] 或者-D complete-rule，可以使用负数</p>
-<p>-C, –change-counters</p>
+<p>-C, --change-counters</p>
 <p>​                pass</p>
-<p>-I, –insert</p>
+<p>-I, --insert</p>
 <p>​                -I rule [在某个特定的位置，一般是某一个chain的最开始]插入一条rule</p>
 <p>​                如果现在某个chain已经有了N条规则，那么在 i（i&gt;0）出插入和在 i-N-1</p>
 <p>​                 处插入是一样的。当要一次性插入多条规则时，令 i 严格小于0 是有好处的。</p>
-<p>-P, –policy</p>
+<p>-P, --policy</p>
 <p>​                设置chain的默认target，ACCEPT、DROP、RETURN</p>
-<p>-F, –flush</p>
+<p>-F, --flush</p>
 <p>​                除非你指定一条chain，否则清除所有chain的规则</p>
-<p>-Z, –zero</p>
+<p>-Z, --zero</p>
 <p>​                除非你指定一条chain，否则设置所有chain的匹配计数为0，与-L连用时，会先print出已有的匹配计数</p>
-<p>-L, –list</p>
+<p>-L, --list</p>
 <p>​                除非你指定一条chain，否则所有chain的规则都列出来</p>
 <p>​                –Ln 列出所有规则的rule number（即在chain中的序号），与–Lx不兼容</p>
 <p>​                –Lc 在列出规则同时也展示匹配的帧的数量(pcnt)和字节计数(bcnt)，与–Lx配合时可以美化匹配计数的显示</p>
 <p>​                –Lx </p>
 <p>​                –Lmac2 展示完整的mac地址</p>
-<p>-N, –new-chain</p>
+<p>-N, --new-chain</p>
 <p>​                创建一个自定义链，自定义链的最大名字长度为31个字符，默认target是ACCEPT，但可辅助以-P修改</p>
-<p>-X, –delete-chain</p>
+<p>-X, --delete-chain</p>
 <p>​                删除一条没有被引用的用户自定义链，如果没有指定则删除所有没被引用的自定义chain</p>
-<p>-E, –rename-chain</p>
+<p>-E, --rename-chain</p>
 <p>​                可以重命名自定义链或者内建的链，作用不是很大，如果更改则在提交问题的时候注意写明。</p>
-<p>–init-table</p>
+<p>--init-table</p>
 <p>​                将当前table的数据用初始数据覆盖</p>
-<p>–atomic-init</p>
+<p>--atomic-init</p>
 <p>​                将内核中保存的该table的原始数据保存到一个特定文件中去（相当于最初试的快照）</p>
-<p>–atomic-save</p>
+<p>--atomic-save</p>
 <p>​                将内核中保存的该table的目前的数据保存到一个特定文件中去（相当于备份）</p>
-<p>–atomic-commit</p>
+<p>--atomic-commit</p>
 <p>​                可以将一个特定文件中的数据提交到并覆盖内核中的数据</p>
 <p>​                <strong>使用步骤：</strong></p>
 <ol>
@@ -201,12 +187,12 @@
 <li><p>在操作系统起始的 boot script 中十分有用，用来构建快速 ebtables</p>
 </li>
 </ol>
-<p>-V, –version</p>
-<p>-h, –help [list of module names]</p>
-<p>-j, –jump <em>target</em></p>
-<p>–atomic-file <em>file</em></p>
-<p>-M, –modprobe <em>program</em> : 与内核交互时，使用 <em>program</em> 尝试自动加载某个缺失的内核模块</p>
-<p>–concurrent : 设置一个锁防止脚本们并发地修改内核中维护的 ebtables 表</p>
+<p>-V, --version</p>
+<p>-h, --help [list of module names]</p>
+<p>-j, --jump <em>target</em></p>
+<p>--atomic-file <em>file</em></p>
+<p>-M, --modprobe <em>program</em> : 与内核交互时，使用 <em>program</em> 尝试自动加载某个缺失的内核模块</p>
+<p>--concurrent : 设置一个锁防止脚本们并发地修改内核中维护的 ebtables 表</p>
 <h3 id="规则说明"><a href="#规则说明" class="headerlink" title="规则说明"></a>规则说明</h3><p>-p, –protocol [!] <em>protocol</em></p>
 <p>​                创造出一个帧所使用的协议，可以是一个大于 0x0600 的16进制数 或<strong>长度</strong>。以太网帧的协议域可以用来指示头部的长度。当该域的值小于或等于 0x0600时，那么该值就等于帧头的大小并且不能被用作协议号。相反，所有协议域被用作长度域时的帧通常会被认为使用了“和那个长度对应”的协议。这些协议在这些帧中的名字就是长度(值) [<strong>LENGTH</strong>)，<code>/etc/ethertypes</code> 文件以人类可读的方式展示了协议及其的十六进制数字，和英文缩写。比如，<em>0x0800</em> 就表示IPV4协议。这个文件不是大小写敏感的，–proto 可以用来替换 -p</p>
 <p>-i, –in-interface [!] <em>name</em></p>
