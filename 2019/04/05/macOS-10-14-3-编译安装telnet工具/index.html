@@ -100,18 +100,17 @@
 <a id="more"></a>
 
 <h3 id="0x01-前提"><a href="#0x01-前提" class="headerlink" title="0x01 前提"></a>0x01 前提</h3><p>Homebrew 实在是太慢，可以考虑使用privoxy转发代理到terminal使用，但是太麻烦，反正源码也不大，直接使用源码编译安装此时是比较合适的。</p>
-<h3 id="0x02-开始下载并安装"><a href="#0x02-开始下载并安装" class="headerlink" title="0x02 开始下载并安装"></a>0x02 开始下载并安装</h3><ul>
-<li><p>创建临时目录并下载至此</p>
+<h3 id="0x02-开始下载并安装"><a href="#0x02-开始下载并安装" class="headerlink" title="0x02 开始下载并安装"></a>0x02 开始下载并安装</h3><ol>
+<li>创建临时目录并下载至此</li>
+</ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir inetutils</span><br><span class="line">$ <span class="built_in">cd</span> inetutils</span><br><span class="line">$ curl https://ftp.gnu.org/gnu/inetutils/inetutils-1.9.4.tar.xz -O</span><br><span class="line">$ tar -zxvf inetutils-1.9.4.tar.xz</span><br><span class="line">$ <span class="built_in">cd</span> inetutils-1.9.4</span><br><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Users/user_name/inetutils/inetutils-1.9.4</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>配置并编译安装</p>
+
+<ol start="2">
+<li>配置并编译安装</li>
+</ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ./configure --prefix=/usr/<span class="built_in">local</span> --<span class="built_in">disable</span>-servers \</span><br><span class="line">--<span class="built_in">disable</span>-hostname --<span class="built_in">disable</span>-ping --<span class="built_in">disable</span>-ping6 \</span><br><span class="line">--<span class="built_in">disable</span>-logger --<span class="built_in">disable</span>-talk --<span class="built_in">disable</span>-tftp \</span><br><span class="line">--<span class="built_in">disable</span>-whois --<span class="built_in">disable</span>-ifconfig --<span class="built_in">disable</span>-traceroute</span><br><span class="line"></span><br><span class="line">$ make -j8</span><br><span class="line"></span><br><span class="line">$ sudo make install</span><br><span class="line">...input your password...</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>此时便可以使用Telnet了</p>
-</li>
-</ul>
+
+<p>此时便可以使用Telnet了</p>
 
       </div>
       

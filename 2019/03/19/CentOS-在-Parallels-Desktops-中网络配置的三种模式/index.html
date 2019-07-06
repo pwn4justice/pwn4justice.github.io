@@ -104,11 +104,15 @@
 <li>Host-Only Network</li>
 <li>Bridged Network</li>
 </ol>
+<br>
+
 <h2 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h2><ul>
 <li>操作系统：macOS Mojave </li>
 <li>虚拟机：Parallels Desktop</li>
 <li>软件版本：CentOS 7.0 minimal</li>
 </ul>
+<br>
+
 <h2 id="使用NAT模式"><a href="#使用NAT模式" class="headerlink" title="使用NAT模式"></a>使用NAT模式</h2><p>使用NAT模式时，可以选择使用某个虚拟网卡，<br>此时需要知道该网卡的网关，可在主机中使用<br>ifconfig命令查看：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig 得到虚拟网卡地址：</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">inet 10.211.55.2 netmask 0xffffff00 broadcast 10.211.55.255</span><br><span class="line">------------------------------------------------------------</span><br></pre></td></tr></table></figure>
 
@@ -129,6 +133,8 @@
 
 </li>
 </ul>
+<br>
+
 <h2 id="使用桥接模式"><a href="#使用桥接模式" class="headerlink" title="使用桥接模式"></a>使用桥接模式</h2><p>使用桥接模式时：PD的设置如图(此时我需要桥接到wifi网卡上，因为我是连的wifi)</p>
 <p><img src="./bridge.jpg" alt="bridge"></p>
 <p> 查看主机ip：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inet 192.168.199.133 netmask 0xffffff00 broadcast 192.168.199.255</span><br></pre></td></tr></table></figure></p>
@@ -146,11 +152,13 @@
 
 </li>
 </ul>
+<br>
+
 <h2 id="使用仅主机模式"><a href="#使用仅主机模式" class="headerlink" title="使用仅主机模式"></a>使用仅主机模式</h2><p><img src="./host-only.jpg" alt="host-only"></p>
 <ul>
 <li>略。用处不多。</li>
 </ul>
-
+<br>
       </div>
       
       <footer class="post-footer">

@@ -104,7 +104,7 @@
 <li>OS: 11.4</li>
 <li>Jailbreak Tools: unc0ver</li>
 </ul>
-<h4 id="0x02-原因分析"><a href="#0x02-原因分析" class="headerlink" title="0x02 原因分析:"></a>0x02 原因分析:</h4><p>​    国行手机比美版、港版、韩版手机新增了网络授权的功能，iOS 10 及以上系统版本，任何应用首次打开，如果有请求网络的行为，都会提示网络请求授权的对话框。首次打开 Cydia 并没有提示网络请求授权的对话框，这就是导致国行手机 Cydia 不能上网的原因。</p>
+<h4 id="0x02-原因分析"><a href="#0x02-原因分析" class="headerlink" title="0x02 原因分析:"></a>0x02 原因分析:</h4><p>国行手机比美版、港版、韩版手机新增了网络授权的功能，iOS 10 及以上系统版本，任何应用首次打开，如果有请求网络的行为，都会提示网络请求授权的对话框。首次打开 Cydia 并没有提示网络请求授权的对话框，这就是导致国行手机 Cydia 不能上网的原因。</p>
 <h4 id="0x03-解决办法"><a href="#0x03-解决办法" class="headerlink" title="0x03 解决办法:"></a>0x03 解决办法:</h4><p>由于允许上网的应用列表信息保存在以下这几个文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/var/preferences/com.apple.networkextension.plist</span><br><span class="line">/var/preferences/com.apple.networkextension.cache.plist</span><br><span class="line">/var/preferences/com.apple.networkextension.necp.plist</span><br></pre></td></tr></table></figure>
 
@@ -119,12 +119,11 @@
 <li><p>使用PC或者Mac的ssh工具连接iPhone，默认 root 密码为<code>alpine</code></p>
 </li>
 <li><p>删除上述三个文件即可</p>
-</li>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /var/preferences</span><br><span class="line">rm 三个文件</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /var/preferences</span><br><span class="line">rm 三个文件</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>别忘了修改 root 密码</p>
 </li>
-<li><p>此时关闭 科学上网 仍然可以使用 <code>Cydia</code> 了</p>
+<li><p>此时关闭科学上网仍然可以使用 <code>Cydia</code> 了</p>
 </li>
 </ol>
 
