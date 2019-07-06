@@ -94,21 +94,22 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#三种模式简介："><span class="toc-text">三种模式简介：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建："><span class="toc-text">环境搭建：</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#步骤"><span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用NAT模式"><span class="toc-text">使用NAT模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用桥接模式"><span class="toc-text">使用桥接模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用仅主机模式"><span class="toc-text">使用仅主机模式</span></a></li></ol>
-    </li></div>
-  </div><div class="post-content"><h2 id="三种模式简介："><a href="#三种模式简介：" class="headerlink" title="三种模式简介："></a>三种模式简介：</h2><ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#三种模式简介："><span class="toc-text">三种模式简介：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建："><span class="toc-text">环境搭建：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用NAT模式"><span class="toc-text">使用NAT模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用桥接模式"><span class="toc-text">使用桥接模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用仅主机模式"><span class="toc-text">使用仅主机模式</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>本文简要介绍了如何在 Parallels Desktops 中配置 CentOS 虚拟机的网络</p>
+<a id="more"></a>
+
+<h2 id="三种模式简介："><a href="#三种模式简介：" class="headerlink" title="三种模式简介："></a>三种模式简介：</h2><ol>
 <li>NAT (Shared Network)</li>
 <li>Host-Only Network</li>
 <li>Bridged Network</li>
 </ol>
-<a id="more"></a>
-
 <h2 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h2><ul>
 <li>操作系统：macOS Mojave </li>
 <li>虚拟机：Parallels Desktop</li>
 <li>软件版本：CentOS 7.0 minimal</li>
 </ul>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="使用NAT模式"><a href="#使用NAT模式" class="headerlink" title="使用NAT模式"></a>使用NAT模式</h2><p>使用NAT模式时，可以选择使用某个虚拟网卡，<br>此时需要知道该网卡的网关，可在主机中使用<br>ifconfig命令查看：</p>
+<h2 id="使用NAT模式"><a href="#使用NAT模式" class="headerlink" title="使用NAT模式"></a>使用NAT模式</h2><p>使用NAT模式时，可以选择使用某个虚拟网卡，<br>此时需要知道该网卡的网关，可在主机中使用<br>ifconfig命令查看：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig 得到虚拟网卡地址：</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">inet 10.211.55.2 netmask 0xffffff00 broadcast 10.211.55.255</span><br><span class="line">------------------------------------------------------------</span><br></pre></td></tr></table></figure>
 
 <p><img src="nat.jpg" alt="nat"></p>

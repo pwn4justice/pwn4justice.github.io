@@ -96,13 +96,14 @@
     <div class="post-toc-content">
       <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#iPhone-越狱后-Cydia-商店无法加载网络"><span class="toc-text">iPhone 越狱后 Cydia 商店无法加载网络</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-环境"><span class="toc-text">0x01 环境:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-原因分析"><span class="toc-text">0x02 原因分析:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-解决办法"><span class="toc-text">0x03 解决办法:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x04-具体步骤"><span class="toc-text">0x04 具体步骤:</span></a></li></ol></li></ol>
     </div>
-  </div><div class="post-content"><h3 id="iPhone-越狱后-Cydia-商店无法加载网络"><a href="#iPhone-越狱后-Cydia-商店无法加载网络" class="headerlink" title="iPhone 越狱后 Cydia 商店无法加载网络"></a>iPhone 越狱后 Cydia 商店无法加载网络</h3><h4 id="0x01-环境"><a href="#0x01-环境" class="headerlink" title="0x01 环境:"></a>0x01 环境:</h4><ul>
+  </div><div class="post-content"><p>本文介绍了当 iPhone 越狱后 Cydia 无法加载网络的解决办法</p>
+<a id="more"></a>
+
+<h3 id="iPhone-越狱后-Cydia-商店无法加载网络"><a href="#iPhone-越狱后-Cydia-商店无法加载网络" class="headerlink" title="iPhone 越狱后 Cydia 商店无法加载网络"></a>iPhone 越狱后 Cydia 商店无法加载网络</h3><h4 id="0x01-环境"><a href="#0x01-环境" class="headerlink" title="0x01 环境:"></a>0x01 环境:</h4><ul>
 <li>iPhone SE</li>
 <li>OS: 11.4</li>
 <li>Jailbreak Tools: unc0ver</li>
 </ul>
-<a id="more"></a>
-
 <h4 id="0x02-原因分析"><a href="#0x02-原因分析" class="headerlink" title="0x02 原因分析:"></a>0x02 原因分析:</h4><p>​    国行手机比美版、港版、韩版手机新增了网络授权的功能，iOS 10 及以上系统版本，任何应用首次打开，如果有请求网络的行为，都会提示网络请求授权的对话框。首次打开 Cydia 并没有提示网络请求授权的对话框，这就是导致国行手机 Cydia 不能上网的原因。</p>
 <h4 id="0x03-解决办法"><a href="#0x03-解决办法" class="headerlink" title="0x03 解决办法:"></a>0x03 解决办法:</h4><p>由于允许上网的应用列表信息保存在以下这几个文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/var/preferences/com.apple.networkextension.plist</span><br><span class="line">/var/preferences/com.apple.networkextension.cache.plist</span><br><span class="line">/var/preferences/com.apple.networkextension.necp.plist</span><br></pre></td></tr></table></figure>
