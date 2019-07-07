@@ -97,6 +97,11 @@
       <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#树的迭代（Tree-iteration）"><span class="toc-text">树的迭代（Tree iteration）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化-（Serialization）"><span class="toc-text">序列化 （Serialization）</span></a></li></ol>
     </div>
   </div><div class="post-content"><p>原文来源：<a href="https://lxml.de/tutorial.html" target="_blank" rel="noopener">https://lxml.de/tutorial.html</a></p>
+<p>本文内容：</p>
+<ol>
+<li>树的迭代</li>
+<li>序列化</li>
+</ol>
 <a id="more"></a>
 
 <h3 id="树的迭代（Tree-iteration）"><a href="#树的迭代（Tree-iteration）" class="headerlink" title="树的迭代（Tree iteration）"></a>树的迭代（Tree iteration）</h3><p>对于上面的问题，也就是当你想反复地遍历文档树并对其中元素们进行操作的时候，树迭代是一个方便的解决方案。元素对象（Elements）提供了一个树迭代器来做到这些。这个迭代器（ <strong>obj.iter()</strong> ）会以<em>文档顺序（document order）</em>产生元素对象，例如：<strong>如果你把树序列化成XML，它们的标签会按顺序出现</strong></p>
