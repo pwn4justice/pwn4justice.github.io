@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://pwn4justice.github.io/">
+<meta name="description" content="lxml.etree tutorial - part four"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://pwn4justice.github.io/2019/07/07/lxml-etree-tutorial-part-four/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
@@ -37,7 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
 </script>
 
-    <title>J.A.R.V.I.S</title>
+    <title>lxml.etree tutorial - part four - J.A.R.V.I.S</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -80,9 +80,9 @@
 
       <main id="main" class="main">
         <div class="content-wrapper">
-          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
+          <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/07/07/lxml-etree-tutorial-part-four/">lxml.etree tutorial - part four</a>
+      <h1 class="post-title">lxml.etree tutorial - part four
         </h1>
 
       <div class="post-meta">
@@ -91,7 +91,12 @@
         </span></div>
     </header>
 
-    <div class="post-content"><h2 id="ElementTree-类"><a href="#ElementTree-类" class="headerlink" title="ElementTree 类"></a>ElementTree 类</h2><p>一个 元素树（ElementTree）对象大体上可以看成是一个 包含根节点的树的文档包装器（顾名思义：ElementTree 是用来包装XML文档的，意味着你要给他传递一个XML文档对象）。其还提供了数个方法以供序列化和常见的文档处理功能。</p>
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ElementTree-类"><span class="toc-text">ElementTree 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从字符串和文件中解析"><span class="toc-text">从字符串和文件中解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fromstring-函数"><span class="toc-text">fromstring() 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XML-函数"><span class="toc-text">XML() 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parse-函数"><span class="toc-text">parse() 函数</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h2 id="ElementTree-类"><a href="#ElementTree-类" class="headerlink" title="ElementTree 类"></a>ElementTree 类</h2><p>一个 元素树（ElementTree）对象大体上可以看成是一个 包含根节点的树的文档包装器（顾名思义：ElementTree 是用来包装XML文档的，意味着你要给他传递一个XML文档对象）。其还提供了数个方法以供序列化和常见的文档处理功能。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>root = etree.XML(<span class="string">'''\			;;此处反斜杠好像是为了避免出现开头的空格导致格式混乱</span></span><br><span class="line"><span class="string"><span class="meta">... </span>&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="string"><span class="meta">... </span>&lt;!DOCTYPE root SYSTEM "test" [ &lt;!ENTITY tasty "parsnips"&gt; ]&gt;</span></span><br><span class="line"><span class="string"><span class="meta">... </span>&lt;root&gt;</span></span><br><span class="line"><span class="string"><span class="meta">... </span>  &lt;a&gt;&amp;tasty;&lt;/a&gt;</span></span><br><span class="line"><span class="string"><span class="meta">... </span>&lt;/root&gt;</span></span><br><span class="line"><span class="string"><span class="meta">... </span>'''</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree = etree.ElementTree(root)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(tree.docinfo.xml_version)</span><br><span class="line"><span class="number">1.0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(tree.docinfo.doctype)</span><br><span class="line">&lt;!DOCTYPE root SYSTEM <span class="string">"test"</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.docinfo.public_id = <span class="string">'-//W3C//DTD XHTML 1.0 Transitional//EN'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.docinfo.system_url = <span class="string">'file://local.dtd'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(tree.docinfo.doctype)</span><br><span class="line">&lt;!DOCTYPE root PUBLIC <span class="string">"-//W3C//DTD XHTML 1.0 Transitional//EN"</span> <span class="string">"file://local.dtd"</span>&gt;</span><br></pre></td></tr></table></figure>
 
 <br>
@@ -143,154 +148,17 @@
 </ol>
 <p>注意：传递一个文件名或者URL通常比传递一个打开的文件或者类文件对象要快得多。<br>然而，位于 libxml2 库中的 HTTP/FTP 客户端程序的实现是相当简单的，所以当涉及到像 HTTP 身份验证（这样复杂的任务）的话，需要使用专用的 URL 请求库，比如 <strong>urllib2</strong> 或者 <strong>requests</strong> 。这些库通常会提供一个类文件的对象以接收你从响应流中解析出来的结果。</p>
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/07/07/XPath-学习（一）/">XPath 学习（一）</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-07-07
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>什么是 XPath？怎么使用的？什么是路径表达式、Step、路径、节点、元素、节点与元素的区别，等等…</p>
-          <div class="read-more">
-            <a href="/2019/07/07/XPath-学习（一）/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/07/06/lxml-etree-tutorial-part-three/">lxml etree tutorial - part three</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-07-06
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>原文来源：<a href="https://lxml.de/tutorial.html" target="_blank" rel="noopener">https://lxml.de/tutorial.html</a></p>
-          <div class="read-more">
-            <a href="/2019/07/06/lxml-etree-tutorial-part-three/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/07/02/lxml-etree-tutorial-part-two/">lxml.etree tutorial - part two</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-07-02
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>原文来源：<a href="https://lxml.de/tutorial.html" target="_blank" rel="noopener">https://lxml.de/tutorial.html</a></p>
-          <div class="read-more">
-            <a href="/2019/07/02/lxml-etree-tutorial-part-two/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/06/22/lxml-etree-tutorial-part-one/">lxml.etree tutorial - part one</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-06-22
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>原文来源：<a href="https://lxml.de/tutorial.html" target="_blank" rel="noopener">https://lxml.de/tutorial.html</a></p>
-          <div class="read-more">
-            <a href="/2019/06/22/lxml-etree-tutorial-part-one/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/06/10/SQL-注入之坑/">SQL 注入之坑</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-06-10
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>记录了一些自己在实践 SQL 注入时遇到的问题及解决和思考。</p>
-          <div class="read-more">
-            <a href="/2019/06/10/SQL-注入之坑/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/05/16/ebtables-的Man-Page/">ebtables 的 Man Page</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-05-16
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>以下内容翻译自 ebtables 的 Man 页</p>
-          <div class="read-more">
-            <a href="/2019/05/16/ebtables-的Man-Page/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/04/30/iptables/">iptables</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-04-30
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>原文地址：<code>http://www.zsythink.net/archives/tag/iptables/page/2/</code></p>
-
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/04/22/Shell-Usage/">Shell Usage</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-04-22
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>关于如何使用shell以及vim的笔记，用于常常翻看</p>
-          <div class="read-more">
-            <a href="/2019/04/22/Shell-Usage/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/2019/04/07/Cydia-无法连接网络的处理/">Cydia 无法连接网络的处理</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-04-07
-        </span></div>
-    </header>
-
-    <div class="post-content"><p>本文介绍了当 iPhone 越狱后 Cydia 无法加载网络的解决办法</p>
-          <div class="read-more">
-            <a href="/2019/04/07/Cydia-无法连接网络的处理/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <nav class="pagination"><a class="next" href="/page/2/">
-        <span class="next-text">下一页</span>
+      </div>
+      
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="next" href="/2019/07/07/XPath-学习（一）/">
+        <span class="next-text nav-default">XPath 学习（一）</span>
+        <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
-    </nav></section></div></div>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
       </main>
 
       <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
