@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
-<link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://pwn4justice.github.io/archives/">
+<meta name="description" content="一席网页视频如何加速?"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://pwn4justice.github.io/2019/07/14/一席网页视频如何加速/">
 
 <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
@@ -37,8 +37,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
 </script>
 
-    <title>归档 - J.A.R.V.I.S
-  </title>
+    <title>一席网页视频如何加速? - J.A.R.V.I.S</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -81,119 +80,46 @@
 
       <main id="main" class="main">
         <div class="content-wrapper">
-          <div id="content" class="content"><section id="archive" class="archive"><div class="archive-title">
-          <span class="archive-post-counter">
-            目前共计 17 篇日志
-          </span>
-        </div>
-      <div class="collection-title">
-            <h2 class="archive-year">2019</h2>
-          </div>
-        <div class="archive-post">
-        <span class="archive-post-time">
-          07-14
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/14/一席网页视频如何加速/" class="archive-post-link">
-            一席网页视频如何加速?
-          </a>
-        </span>
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">一席网页视频如何加速?
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-07-14
+        </span></div>
+    </header>
+
+    <div class="post-content"><p>一席（Yixi.tv）中的视频没有加速功能，如何通过修改（或利用）网页 javascript 来更改 HTML5 视频的播放速度呢？</p>
+<a id="more"></a>
+
+<p>了解：网页视频播放速度使用的是 <code>playbackRate</code> ，据猜测，这可能是个属性，或者方法。</p>
+<ol>
+<li><p>打开 F12 ，找到视频的 div ：<code>&lt;div ... id=&quot;my-video&quot;&gt;...&lt;/div&gt;</code></p>
+</li>
+<li><p>在 console 编写如下代码：</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> video = <span class="built_in">document</span>.getElementById(<span class="string">"my-video"</span>);video.player.playbackRate(<span class="number">1.25</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如何知道playbackRate是个方法的呢？一个个测试</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">alert(video.playbackRate)	==&gt; undefined</span><br><span class="line">alert(video.playbackRate())	</span><br><span class="line">alert(video.让其自动弹出提示)	==&gt; 找到了 player 这么个东西，或许里面会有 playbackRate</span><br><span class="line">alert(video.player.让其自动弹出提示)	==&gt; 找到了 playbackRate</span><br><span class="line">alert(video.player.playbackRate)	==&gt; 弹出了 playbackRate 的内容，如下:</span><br><span class="line">---- playbackRate() ----</span><br><span class="line">function playbackRate(rate)&#123;</span><br><span class="line">	if(rate !== undefined)&#123;</span><br><span class="line">		this.techCall_(&apos;setPlaybackRate&apos;, rate);</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	if(this.tech_ &amp;&amp; this.tech_.featuresPlaybackRate)&#123;</span><br><span class="line">		return this.techGet_(&apos;playbackRate&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	return 1.0;	//如果没有指定 rate ，就使用 1.0 这个默认值... 所以在 console 里给其指定一个值就好了</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+
       </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          07-08
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/08/BeautifulSoup/" class="archive-post-link">
-            BeautifulSoup
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          07-08
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/08/lxml-etree-tutorial-part-five/" class="archive-post-link">
-            lxml.etree tutorial - part five
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          07-07
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/07/lxml-etree-tutorial-part-four/" class="archive-post-link">
-            lxml.etree tutorial - part four
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          07-07
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/07/XPath-学习（一）/" class="archive-post-link">
-            XPath 学习（一）
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          07-06
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/06/lxml-etree-tutorial-part-three/" class="archive-post-link">
-            lxml etree tutorial - part three
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          07-02
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/07/02/lxml-etree-tutorial-part-two/" class="archive-post-link">
-            lxml.etree tutorial - part two
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          06-22
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/06/22/lxml-etree-tutorial-part-one/" class="archive-post-link">
-            lxml.etree tutorial - part one
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          06-10
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/06/10/SQL-注入之坑/" class="archive-post-link">
-            SQL 注入之坑
-          </a>
-        </span>
-      </div>
-    <div class="archive-post">
-        <span class="archive-post-time">
-          05-16
-          </span>
-        <span class="archive-post-title">
-          <a href="/2019/05/16/ebtables-的Man-Page/" class="archive-post-link">
-            ebtables 的 Man Page
-          </a>
-        </span>
-      </div>
-    </section><nav class="pagination"><a class="next" href="/archives/page/2/">
-        <span class="next-text">下一页</span>
+      
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="next" href="/2019/07/08/BeautifulSoup/">
+        <span class="next-text nav-default">BeautifulSoup</span>
+        <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
-    </nav></div></div>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
       </main>
 
       <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
