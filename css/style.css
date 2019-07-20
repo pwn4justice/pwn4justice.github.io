@@ -588,7 +588,7 @@ h6 {
       font-weight: 400;
       text-transform: uppercase; }
     .post .post-toc .post-toc-content {
-      font-size: 15px; }
+      font-size: 10px; }
       .post .post-toc .post-toc-content .toc,
       .post .post-toc .post-toc-content .toc-child {
         list-style: square; }
@@ -647,7 +647,9 @@ h6 {
   .post .post-content img {
     display: inline-block;
     max-width: 100%;
-    box-shadow: 8px 8px 7px rgba(0, 0, 0, 0.5); }
+    box-shadow: 8px 8px 7px rgba(0, 0, 0, 0.5);
+    border: 1px solid black;
+    border-radius: 0.5%; }
   .post .post-content .table-responsive {
     width: 100%;
     margin-bottom: 20px;
