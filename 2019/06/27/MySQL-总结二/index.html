@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="MySQL 总结二"><link rel="alternate" href="/pwn4justice.github.io/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/pwn4justice.github.io/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://pwn4justice.github.io/2019/06/27/MySQL-总结二/">
+
+<link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>MySQL 总结二 - J.A.R.V.I.S</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/pwn4justice.github.io/." class="logo">J.A.R.V.I.S</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/pwn4justice.github.io/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/pwn4justice.github.io/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/pwn4justice.github.io/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/pwn4justice.github.io/." class="logo">J.A.R.V.I.S</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/pwn4justice.github.io/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/pwn4justice.github.io/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/pwn4justice.github.io/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">MySQL 总结二
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-06-27
+        </span></div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#视图"><span class="toc-text">视图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储过程"><span class="toc-text">存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游标"><span class="toc-text">游标</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>内容：</p>
+<ul>
+<li>视图</li>
+<li>存储过程</li>
+<li>游标</li>
+</ul>
+<a id="more"></a>
+
+<h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><ul>
+<li>CREATE VIEW viewname AS …<ul>
+<li>CREATE OR REPLACE VIEW</li>
+<li>DROP VIEW &amp;&amp; CREATE VIEW</li>
+</ul>
+</li>
+<li>SHOW CREATE VIEW viewname</li>
+<li>DROP VIEW</li>
+<li>SELECT FROM VIEW</li>
+<li>UNION VIEW</li>
+<li>INSERT / UPDATE / DELTE - 但是有限制</li>
+</ul>
+<br>
+
+<h3 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h3><ul>
+<li>创建存储过程的权限</li>
+<li>使用存储过程的权限</li>
+<li>创建<ul>
+<li>CREATE PROCEDURE name() BEGIN … END;</li>
+<li>带 OUT 参数的存储过程创建与调用</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE productpricing(</span><br><span class="line">    OUT pl DECIMAL(8,2),</span><br><span class="line">    OUT ph DECIMAL(8,2),</span><br><span class="line">    OUT pa DECIMAL(8,2)</span><br><span class="line">)</span><br><span class="line">BEGIN</span><br><span class="line">	SELECT Min(prod_price)</span><br><span class="line">	INTO pl</span><br><span class="line">	FROM products;</span><br><span class="line">	</span><br><span class="line">	SELECT Max(prod_price)</span><br><span class="line">	INTO ph</span><br><span class="line">	FROM products;</span><br><span class="line">	</span><br><span class="line">	SELECT Avg(prod_price)</span><br><span class="line">	INTO pa</span><br><span class="line">	FROM products;</span><br><span class="line">	</span><br><span class="line">END;</span><br><span class="line"></span><br><span class="line">CALL productpricing(@minprice, @maxprice, @avgprice);</span><br><span class="line"></span><br><span class="line">SELECT @maxprice;</span><br><span class="line">+---------------+</span><br><span class="line">| @maxprice		|</span><br><span class="line">+---------------+</span><br><span class="line">| 2003.332		|</span><br><span class="line">+---------------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---------- 带 IN/OUT 的存储过程 ----------</span><br><span class="line">CREATE PROCEDURE ordertotal(</span><br><span class="line">    IN onumber INT,</span><br><span class="line">    OUT ototal DECIMAL(8,2)</span><br><span class="line">)</span><br><span class="line">BEGIN</span><br><span class="line">	SELECT SUM(item_price * quantity)</span><br><span class="line">	FROM orderitems</span><br><span class="line">	WHERE order_num = onumber</span><br><span class="line">	INTO ototal;						;;注意此处 INTO 并没有直接跟在 SELECT 后</span><br><span class="line">END;</span><br><span class="line"></span><br><span class="line">CALL ordertotal(20005, @total);			;;20005 是订单号</span><br><span class="line">SELECT @total;</span><br><span class="line">+--------+</span><br><span class="line">| @total |</span><br><span class="line">+--------+</span><br><span class="line">| 4000	 |</span><br><span class="line">+--------+</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行<ul>
+<li>又称调用</li>
+<li>CALL name(@arg1, @arg2…);</li>
+<li>执行可以显示结果，也可以不显示</li>
+</ul>
+</li>
+</ul>
+<p><strong>注：</strong> 在命令行里<code>;</code> 是语句分隔符，如果命令行里要解释存储过程自身内的 <code>;</code> 字符，则应该先临时更改分隔符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DELIMETER //</span><br><span class="line">CREATE PROCEDURE productpricing()</span><br><span class="line">BEGIN</span><br><span class="line">	SELECT Avg(prod_price) AS priceaverage</span><br><span class="line">	FROM products;							;;此处出现了 &apos;;&apos;</span><br><span class="line">END //</span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DROP PROCEDURE name;            没有()</li>
+<li>SHOW RPOCEDURE STATUS;        获得谁创建了该存储过程，何时创建的等详细信息</li>
+</ul>
+<p><strong>一个更复杂的存储过程例子</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">-- Name: ordertotal				;; &apos;-- &apos; 后接注释，这在MySQL注入里已经出现过多次了!!</span><br><span class="line">-- Parameters:  onumber = order_number</span><br><span class="line">-- 				taxable = 0 if not taxable, 1 if taxable</span><br><span class="line">-- 				ototal = order total variable</span><br><span class="line"></span><br><span class="line">CREATE PROCEDURE ordertotal(</span><br><span class="line">    IN onumber INT,</span><br><span class="line">    IN taxable BOOLEAN,</span><br><span class="line">    OUT ototal DECIMAL(8,2)</span><br><span class="line">) COMMENT &quot;Obtain order total, optionally adding tax&quot;</span><br><span class="line">BEGIN</span><br><span class="line">	-- Declare variable for total</span><br><span class="line">	DECLARE total DECIMAL(8,2);</span><br><span class="line">	</span><br><span class="line">	-- Declare tax percentage</span><br><span class="line">	DECLARE taxrate INT DEFAULT 6;</span><br><span class="line">	</span><br><span class="line">	-- Get the order total</span><br><span class="line">	SELECT SUM(item_price * quantity)</span><br><span class="line">	FROM orderitems</span><br><span class="line">	WHERE order_num = onumber</span><br><span class="line">	INTO total;</span><br><span class="line">	</span><br><span class="line">	IF taxable THEN</span><br><span class="line">		SELECT total+(total/100*taxrate) INTO total;</span><br><span class="line">	END IF;				-- 还有 ELSEIF 和 ELSE 等子句</span><br><span class="line">	</span><br><span class="line">	-- Finally, save to OUT variable</span><br><span class="line">	SELECT total INTO ototal;</span><br><span class="line">END;</span><br><span class="line"></span><br><span class="line">-- 调用：-- </span><br><span class="line">CALL ordertotal(20004, 1, @total);</span><br><span class="line">SELECT @total;</span><br><span class="line"></span><br><span class="line">CALL ordertotal(20003, 0, @total);</span><br><span class="line">SELECT @total;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="游标"><a href="#游标" class="headerlink" title="游标"></a>游标</h3><p><strong>注：</strong> MySQL的游标只能用于存储过程中，这点和其他 DBMS 有些不太相同</p>
+<p>使用过程：</p>
+<ol>
+<li>定义（创建）<ol>
+<li>DECLARE</li>
+</ol>
+</li>
+<li>使用<ol>
+<li>OPEN</li>
+<li>CLOSE</li>
+<li>REPEAT – 常用来对游标进行循环读取</li>
+<li>LEAVE – 手动结束循环</li>
+</ol>
+</li>
+<li>检索<ol>
+<li>FETCH</li>
+</ol>
+</li>
+<li>关闭 <ol>
+<li>CLOSE</li>
+</ol>
+</li>
+</ol>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE processorders()</span><br><span class="line">BEGIN</span><br><span class="line">	-- Declare the cursor</span><br><span class="line">	DECLARE ordernumbers CURSOR		-- 游标使用 DECLARE 定义，像变量一样</span><br><span class="line">	FOR								-- FOR 关键字</span><br><span class="line">	SELECT order_num FROM orders;	-- 游标检索的内容</span><br><span class="line">	</span><br><span class="line">	-- Open the cursor</span><br><span class="line">	OPEN ordernumbers;				-- OPEN 打开</span><br><span class="line">	</span><br><span class="line">	-- Fetch Data:</span><br><span class="line">	FETCH ordernumbers INTO ...;	-- 只会得到一个值，如需取得游标内所有值，应使用循环，REPEAT</span><br><span class="line">	</span><br><span class="line">	-- Close the cursor</span><br><span class="line">	CLOSE ordernumbers;		-- 不用时关闭，节省内存空间</span><br><span class="line">	</span><br><span class="line">END;						-- END 时也会自动关闭游标！</span><br><span class="line">-- 游标相当于指针--</span><br></pre></td></tr></table></figure>
+
+<p>更接近真实的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE processorders()</span><br><span class="line">BEGIN</span><br><span class="line">	DECLARE done BOOLEAN DEFAULT 0;</span><br><span class="line">	DECLARE o INT;</span><br><span class="line">	DECLARE t DECIMAL(8,2);</span><br><span class="line">	</span><br><span class="line">	DECLARE ordernumbers CURSOR</span><br><span class="line">	FOR</span><br><span class="line">	SELECT order_num FROM orders;</span><br><span class="line">	</span><br><span class="line">	-- Declare continue handler		用来检测结束条件</span><br><span class="line">	DECLARE CONTINUE HANDLER FOR SQLSTATE &apos;02000&apos; SET done=1;	-- 02000 是行读取错误（读完了），然后设置 done 变量为1</span><br><span class="line">	</span><br><span class="line">	-- Create a new table</span><br><span class="line">	CREATE TABLE IF NOT EXISTS ordertotals(</span><br><span class="line">        order_num INT,</span><br><span class="line">        total DECIMAL(8,2)</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    -- OPEN cursor</span><br><span class="line">    OPEN ordernumbers;</span><br><span class="line">    </span><br><span class="line">    REPEAT</span><br><span class="line">    	-- 循环</span><br><span class="line">    	FETCH ordernumbers INTO o;</span><br><span class="line">    	</span><br><span class="line">    	CALL ordertotal(o, 1, t);		-- 调用上面计算税的存储过程</span><br><span class="line">    	</span><br><span class="line">    	-- Insert into new table</span><br><span class="line">    	INSERT INTO ordertotals(order_num, total)</span><br><span class="line">    	VALUES(o, t);</span><br><span class="line">    	</span><br><span class="line">    	-- END LOOP</span><br><span class="line">    	UNTIL done END REPEAT;</span><br><span class="line">    	</span><br><span class="line">    CLOSE ordernumbers;</span><br><span class="line">    </span><br><span class="line">END;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://pwn4justice.github.io">pwn4justice</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://pwn4justice.github.io/2019/06/27/MySQL-总结二/">https://pwn4justice.github.io/2019/06/27/MySQL-总结二/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/pwn4justice.github.io/2019/06/29/BurpSuite-无法抓取本地DVWA数据包的解决方案/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">BurpSuite 无法抓取本地DVWA数据包的解决方案</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/pwn4justice.github.io/2019/06/25/MySQL-总结/">
+        <span class="next-text nav-default">MySQL 总结</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="vcomments"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/pwn4justice" class="iconfont icon-github" title="github"></a>
+        <a href="/pwn4justice.github.io/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">pwn4justice</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><!-- valine Comments: add by pwn4justice at 0:19 2019/7/15 -->
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.2.0/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+	new Valine({
+		el: '#vcomments',
+		notify: false,
+		verify: false,
+		app_id: "c0QrSCsFudA3BmlYdMzo2VwF-MdYXbMMI",
+		app_key: "488SWS1mtwysEQnDRnqDDRXH",
+		placeholder: "Give me some advise ...",
+		avatar: 'mm',
+		visitor: true		<!-- add by me -->
+	});
+  </script>
+  <!-- origin value:"cdn.jsdelivr.net/gh/xcss/valine@v1.1.7/dist/Valine.min.js" --><script type="text/javascript" src="/pwn4justice.github.io/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
