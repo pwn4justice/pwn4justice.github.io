@@ -131,7 +131,83 @@
 <p><img src="code2.jpg" alt="code"></p>
 <p><strong>后门代码分析：</strong></p>
 <p>主要函数：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br></pre></td></tr></table></figure>
+<p><strong>set_time_limit( int ): bool</strong></p>
+<p><strong>解释：</strong>设置此脚本的最大运行时间（可叠加），当时间到了，就会返回一个致命的错误。默认值是30秒，或者你也可以在 <code>php.ini</code> 文件中设置这个值：<code>max_execution_time</code> 。</p>
+<p>当被调用的时候，这个函数将计数器置为0，如果接下来的语句又设置了这个函数，那么总时间会叠加；当使用 <code>set_time_limit(0)</code> 的时候，则代表没有时间限制。</p>
+<p>返回值：成功返回<strong>真</strong>（TRUE），失败返回<strong>假</strong>（FALSE）</p>
+<p><strong>ignore_user_abort( [bool $value] ) : int</strong></p>
+<p><strong>解释：</strong> 设置当客户端失去连接时是否终止脚本，应该是 webshell 常用？</p>
+<p>当PHP脚本被当作命令行脚本时，除非 <em>value</em> 设置成 <strong>TRUE</strong>，否则如果脚本的 tty 退出了 而脚本却没有正常终止的话，下次尝试写入数据时就会崩溃。<strong>应该是设置为真后，可以保持长连接？？</strong></p>
+<p>如果设置了 value 值，则在 ini 文件会更新；如果没有，则函数会返回以前的设置（一个整数值）</p>
+<p><strong>ini_set( string $varname, string $newvalue ) : string</strong></p>
+<p><strong>解释：</strong>给配置选项设置一个值。在脚本执行期间都会保持该值，结束时恢复。</p>
+<p>不过不是所有的配置选项（php.ini文件中的选项）都支持用这个函数设置，该列表里的值可以：<a href="php.net/manual/en/ini.list.html">appendix</a></p>
+<p>如果成功，则返回老值，失败返回 FALSE</p>
+<p><strong>ini_get( string $varname ) : string</strong></p>
+<p><strong>解释：</strong>取得配置选项的值</p>
+<p><strong>preg_replace( mixed $pattern, mixed ​$replacement, mixed $subject [, int ​$limit = -1 [, int $count ]] ) : mixed</strong></p>
+<p><strong>解释：</strong>正则表达式替换</p>
+<p>模式：可以是字符串也可以是字符串数组</p>
+<p>subject：要被替换的字符串数组或者字符串</p>
+<p>limit：每个subject的每个模式下最大可能替换数。-1 代表不限制</p>
+<p><strong>explode( string $delimiter, string $string [, int $limit = PHP_INT_MAX ]) : array</strong></p>
+<p><strong>解释：</strong>返回一个字符串数组，每一项都是string参数中由delimiter字符分开的字符串，相当于py的split()</p>
+<p><strong>array_map( callable $callback, array $array1 [, array $…] ) : array</strong></p>
+<p><strong>解释：</strong>相当于py的 map()，将回调函数映射到每个数组元素上去，返回一个数组。</p>
+<p>callback 可以传一个 NULL，一般传入一个字符串，且存在以这个字符串为名的函数。</p>
+<p><strong>ob_start ([ callable $output_callback = NULL [, int $chunk_size = 0 [, int $flags  = PHP_OUTPUT_HANDLER_STDFLAGS ]]] ) : bool</strong></p>
+<p><strong>解释：</strong>这个函数会打开输出缓冲区，即任何向浏览器产生输出的函数，输出的内容都不会直接自动发送给浏览器了，而是暂时先缓存下来，直到手动调用 <code>flush</code> 、<code>ob_get_contents</code>、 <code>ob_get_clean</code>  或者 <code>ob_end_flush</code> 才将数据输出，可以拦截的输出函数有：<code>echo</code> 、<code>system</code> 、<code>passthru</code> 等</p>
+<p><strong>is_callable( mixed $var [, bool $syntax_only = FALSE [, string &amp;$callable_name ]] ) : bool</strong></p>
+<p><strong>解释：</strong>验证一个字符串（或者一个字符串数组里）是否有同名的函数可供调用。</p>
+<p><strong>in_array ( mixed $needle, array $haystack [, bool $strict = FALSE ] ) : bool</strong></p>
+<p><strong>解释：</strong>查找 needle 在 数组 中是否存在，默认宽松模式，除非设置了 strict 值（同时检查类型）。</p>
+<p>返回；找到就返回 TRUE 否则返回 FALSE</p>
+<p><strong>ob_get_clean( void ) : string</strong></p>
+<p><strong>解释：</strong>取得当前缓冲区内容并删除当前的输出缓冲区，执行了 <code>ob_get_contents()</code> 和 <code>ob_end_clean()</code>，输出缓冲区必须是由携带 <code>PHP_OUTPUT_HANDLER_CLEANABLE</code> 和 <code>PHP_OUTPUT_HANDLER_REMOVEABLE</code> 标志的 <code>ob_start()</code> 函数开启，否则将会无效。</p>
+<p>返回输出缓冲区里的内容并结束输出缓冲操作。如果输出缓冲一开始就没有被激活的话，会返回 FALSE</p>
+<p><strong>proc_open( string $cmd , array $descriptorspec , array &amp;$pipes [ , string $cwd = NULL [ ,array $env = NULL [ , array $other_options = NULL ] ] ]  ) : resource</strong></p>
+<p><strong>解释：</strong>和 <code>popen()</code> 相似，但是在程序执行时提供了更好的控制力度。</p>
+<p>参数：</p>
+<p>cmd：要执行的命令</p>
+<p>descriptorspec：一个数组，数组索引 0 代表 stdin，1 代表 stdout，2 代表 stderr；每个数组元素的第一个元素是描述符类型，第二个元素是给定类型的选项。有效类型是pipe(第二个元素是r，用于将管道的读端传递给进程，或者是w，用于传递写端)和file(第二个元素是文件名)。</p>
+<p>pipes：将被设置为文件指针的索引数组，该数组对应于所创建的任何管道的PHP端。0:stdin；1:stdout；2:stderr</p>
+<p>cwd：该命令的初始工作目录。这必须是一个绝对目录路径，如果想使用默认值(当前PHP进程的工作目录)，则为NULL。</p>
+<p>env：一个数组，其中包含将运行的命令的环境变量，或NULL，以使用与当前PHP进程相同的环境。</p>
+<p>other_options：额外选项，目前支持：</p>
+<ul>
+<li>suppress_errors (windows only): 当改值设置成 <strong>TRUE</strong> 时，则将抑制函数生成的错误。</li>
+<li>bypass_shell (windows only): 当设置为 *<em>TRUE *</em>时，绕过 cmd.exe shell</li>
+</ul>
+<p><strong>shell_exec( string $cmd ) : string</strong></p>
+<p><strong>解释：</strong>通过shell执行命令并且以字符串格式返回完整的输出内容</p>
+<p>返回命令执行结果或者 NULL（如果发生错误，或者命令没有产生任何输出时）</p>
+<p><strong>proc_close( resource $process ) : int</strong></p>
+<p><strong>解释：</strong>关闭由 <code>proc_open</code> 打开的进程并且返回进程的退出码，-1 代表出错</p>
+<p><strong>passthru( string $command, [, int &amp;$return_var ] ) : void</strong></p>
+<p><strong>解释：</strong>执行外部程序并且展示原始输出。</p>
+<p>passthru()函数类似于exec()函数，因为它执行一个命令。当Unix命令的输出是二进制数据，需要直接传递回浏览器时，应该使用这个函数来代替exec()或system()。它的一个常见用途是执行一些类似pbmplus实用程序的操作，这些实用程序可以直接输出图像流。通过将Content-type设置为image/gif，然后调用pbmplus程序来输出gif，可以创建直接输出图像的PHP脚本。</p>
+<p><strong>popen( string $command, string $mode ) : resource</strong></p>
+<p><strong>解释：</strong>为 command 命令派生的进程打开一个管道。</p>
+<p>如果出错：返回 FALSE；返回与fopen()返回的文件指针相同的文件指针，但它是单向的(可能只用于读取或写入)，并且必须使用pclose()关闭。这个指针可以与fgets()、fgetss()和fwrite()一起使用。当模式为“r”时，返回的文件指针等于命令的STDOUT，当模式为“w”时，返回的文件指针等于命令的STDIN。</p>
+<p><strong>is_resource ( mixed $var ) : bool</strong></p>
+<p><strong>解释：</strong>判断所给变量是否是一个 resource，如果是，返回 TRUE，否则返回 FALSE</p>
+<p><strong>resource：</strong>资源是一个特殊的变量，包含对外部资源的引用。资源由特殊函数创建和使用。有关所有这些函数和相应资源类型的列表，请参见附录。</p>
+<p><strong>exec ( string $command [, array &amp;$output [, int &amp;$return_var ] ] ) : string</strong></p>
+<p><strong>解释：</strong>执行给定的命令。</p>
+<p>如果有output参数，那么指定的数组将被命令的每一行输出填充。后面的空格，如\n，不包括在这个数组中。注意，如果数组已经包含一些元素，exec()将追加到数组的末尾。如果不希望函数附加元素，请在将数组传递给exec()之前调用unset()。</p>
+<p>如果return_var参数和output参数一起出现，那么执行的命令的返回状态将被写入这个变量。</p>
+<p><strong>chr( int $bytevalue ) : string</strong></p>
+<p><strong>解释：</strong>从一个数字生成一个单子节字符串</p>
+<p>返回一个单字符字符串，其中包含通过将bytevalue解释为无符号整数指定的字符。</p>
+<p><strong>join() —&gt; implode ( string $glue, array $pieces ) : string 的别名</strong></p>
+<p><strong>解释：</strong>用 glue 字符串连接数组元素</p>
+<p>或 <code>implode ( array $pieces ) : string</code></p>
+<p><strong>move_uploaded_file ( string $filename, string $destination ) : bool</strong></p>
+<p><strong>解释：</strong>移动一个已上传的文件到一个新的位置。</p>
+<p>这个函数检查以确保文件名指定的文件是一个有效的上传文件(这意味着它是通过PHP的HTTP POST上传机制上传的)。如果文件是有效的，它将被移动到目的地提供的文件名。</p>
+<p>如果上传文件的任何操作都有可能向用户甚至同一系统上的其他用户显示其内容，那么这种检查尤其重要。</p>
+<p>成功返回 TRUE；如果文件名不是有效的上传文件，则不会执行任何操作，move_uploaded_file()将返回FALSE。如果文件名是一个有效的上传文件，但由于某种原因不能移动，则不会发生任何操作，move_uploaded_file()将返回FALSE。此外，还会发出警告。</p>
+<br>
 
 <p>文件分析：</p>
 <p><strong>code1.php :</strong></p>
@@ -219,7 +295,7 @@
 <p><img src="plugins.jpg" alt="plugins"></p>
 <h4 id="10-直连数据库与注入等级"><a href="#10-直连数据库与注入等级" class="headerlink" title="(10) 直连数据库与注入等级"></a>(10) 直连数据库与注入等级</h4><p>直连数据库：</p>
 <blockquote>
-<p>sqlmap.py -d “mysql://username:password@location:port/dbname” –dbs</p>
+<p>sqlmap.py -d “mysql://username:password@location:port/dbname” --dbs</p>
 </blockquote>
 <p>注入等级：</p>
 <blockquote>
