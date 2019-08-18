@@ -109,10 +109,10 @@
 
 <h2 id="侦查-收集"><a href="#侦查-收集" class="headerlink" title="侦查/收集"></a>侦查/收集</h2><p>HTTrack 网站复制</p>
 <p>Google</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. site:</span><br><span class="line"></span><br><span class="line">2. intitle:/allintitle:</span><br><span class="line"></span><br><span class="line">3. allintitle: index of /</span><br><span class="line"></span><br><span class="line">4. 快照（pdf，word，excel等）:</span><br><span class="line"></span><br><span class="line">	cache:baidu.com</span><br><span class="line"></span><br><span class="line">	filetype:</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. site:</span><br><span class="line">2. intitle:/allintitle:</span><br><span class="line">3. allintitle: index of /</span><br><span class="line">4. 快照（pdf，word，excel等）:</span><br><span class="line">	cache:baidu.com</span><br><span class="line">	filetype:</span><br></pre></td></tr></table></figure>
 
 <p>问答网站/BBS/新闻组：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- UseNet</span><br><span class="line">- Google Groups </span><br><span class="line">- BBS</span><br><span class="line">- Stackoverflow</span><br><span class="line">- Quora</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">- 公司邮箱的帖子</span><br><span class="line">- The Harvester 挖掘利用email地址</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- UseNet</span><br><span class="line">- Google Groups </span><br><span class="line">- BBS</span><br><span class="line">- Stackoverflow</span><br><span class="line">- Quora</span><br><span class="line">    ...</span><br><span class="line">- 公司邮箱的帖子</span><br><span class="line">- The Harvester 挖掘利用email地址</span><br></pre></td></tr></table></figure>
 
 <p>netcraft - what’s the site are running.</p>
 <p>Email Server</p>
@@ -147,49 +147,24 @@
 <br>
 
 <p><strong>nmap</strong></p>
-<ul>
-<li><p>-s 默认扫描（SYN）==&gt; -sS（快速）</p>
-</li>
-<li><p>-sT </p>
-</li>
-<li><p>-Pn </p>
-</li>
-<li><p>-p-</p>
-</li>
-<li><p>-iL list.txt</p>
-</li>
-<li><p>-sS/-s</p>
-</li>
-<li><p>不进行UDP扫描就像读书只看导论：UDP扫描</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- -sU</span><br><span class="line">- 速度慢</span><br><span class="line">- 了解那些服务是基于 UDP 的</span><br><span class="line">- 这些服务是不是被放到了单独的主机上</span><br><span class="line">- 当发现结果几乎全是 open|filterd时，加上 -sV 参数，用于版本扫描，可以二次精确 UDP 的扫描结果，将更改部分 open|filterd 为 open，结合起来就是 -sUV</span><br></pre></td></tr></table></figure>
+<p>-s 默认扫描（SYN）==&gt; -sS（快速）</p>
+<p>-sT </p>
+<p>-Pn </p>
+<p>-p-</p>
+<p>-iL list.txt</p>
+<p>-sS/-s</p>
+<p>不进行UDP扫描就像读书只看导论：UDP扫描</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- -sU</span><br><span class="line">- 速度慢</span><br><span class="line">- 了解那些服务是基于 UDP 的</span><br><span class="line">- 这些服务是不是被放到了单独的主机上</span><br><span class="line">- 当发现结果几乎全是 open|filterd时，加上 -sV 参数，用于版本扫描，可以二次精确 UDP 的扫描结果，将更改部分 open|filterd 为 open，结合起来就是 -sUV</span><br></pre></td></tr></table></figure>
 
+<p>Xmas Tree 扫描</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- 在 TCP 的 RFC 文档中有如下描述：</span><br><span class="line">    - 当发送不带 SYN/ACK/RST 的包给一个关闭的端口时，端口必须回复一个 RST</span><br><span class="line">    - 当发送不带 SYN/ACK/RST 的包给一个打开的端口时，端口忽略这个包</span><br><span class="line">- 构造 FIN/PSH/URG 标志位打开（SYN/ACK/RST关闭）的数据包，查看服务器反应</span><br><span class="line">- 前提：目标计算机遵循 RFC 文档实现协议栈</span><br><span class="line">- 作用范围：Unix 和 Linux 主机，对 Windows 几乎不起作用</span><br><span class="line">- 使用：nmap -sX -p- -Pn 1.1.1.1</span><br></pre></td></tr></table></figure>
 
-</li>
-</ul>
-<ul>
-<li><p>Xmas Tree 扫描</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- 在 TCP 的 RFC 文档中有如下描述：</span><br><span class="line">    - 当发送不带 SYN/ACK/RST 的包给一个关闭的端口时，端口必须回复一个 RST</span><br><span class="line">    - 当发送不带 SYN/ACK/RST 的包给一个打开的端口时，端口忽略这个包</span><br><span class="line">- 构造 FIN/PSH/URG 标志位打开（SYN/ACK/RST关闭）的数据包，查看服务器反应</span><br><span class="line">- 前提：目标计算机遵循 RFC 文档实现协议栈</span><br><span class="line">- 作用范围：Unix 和 Linux 主机，对 Windows 几乎不起作用</span><br><span class="line">- 使用：nmap -sX -p- -Pn 1.1.1.1</span><br></pre></td></tr></table></figure>
+<p>Null 扫描</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- 同上，也是发送不规则数据包，且对 Windows 无效果</span><br><span class="line">- 原理：发送没有任何标记的数据包，且目标系统回复同XmasTree扫描一致</span><br><span class="line">- 和 Xmas Tree 扫描都可以绕过一些简单的过滤器和 ACL，他们俩一般只能判断端口开关状态，不会建立任何通信</span><br><span class="line">- 使用：nmap -sN -p- -Pn 1.1.1.1</span><br></pre></td></tr></table></figure>
 
-
-</li>
-</ul>
-<ul>
-<li>Null 扫描  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- 同上，也是发送不规则数据包，且对 Windows 无效果</span><br><span class="line">- 原理：发送没有任何标记的数据包，且目标系统回复同XmasTree扫描一致</span><br><span class="line">- 和 Xmas Tree 扫描都可以绕过一些简单的过滤器和 ACL，他们俩一般只能判断端口开关状态，不会建立任何通信</span><br><span class="line">- 使用：nmap -sN -p- -Pn 1.1.1.1</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li><p>-T 调节扫描速度</p>
-<ul>
-<li>0～5: 5 最快，避免被检测时就要减速，使用 5 时扫描很快，结果不全</li>
-</ul>
-</li>
-<li><p>-sV 同时探测服务版本</p>
-</li>
-<li><p>-O 探测操作系统（需要root）</p>
-</li>
-</ul>
+<p>-T 调节扫描速度，0～5: 5 最快，避免被检测时就要减速，使用 5 时扫描很快，结果不全</p>
+<p>-sV 同时探测服务版本</p>
+<p>-O 探测操作系统（需要root）</p>
 <br>
 
 <p><strong>防火墙原理：</strong></p>
@@ -430,7 +405,7 @@
       <a href="https://pwn4justice.github.io/2019/08/18/渗透测试实践指南读书笔记/">https://pwn4justice.github.io/2019/08/18/渗透测试实践指南读书笔记/</a>
     </p>
     <p class="copyright-item">
-      <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+      <span>许可协议: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
     </p>
   </div>
       <footer class="post-footer">
